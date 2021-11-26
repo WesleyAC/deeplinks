@@ -1,0 +1,26 @@
+{
+  "browser": "./deeplinks.js",
+  "license": "MIT",
+  "scripts": {
+    "clean": "rm -rf dist/",
+    "build": "rollup -c",
+    "lint": "eslint {src,tests}/**/*.ts rollup.config.js",
+    "test": "yarn lint && yarn build && playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.16.3",
+    "@rollup/plugin-typescript": "^8.3.0",
+    "@typescript-eslint/eslint-plugin": "^5.4.0",
+    "@typescript-eslint/parser": "^5.4.0",
+    "connect": "^3.7.0",
+    "eslint": "^8.3.0",
+    "eslint-plugin-playwright": "^0.6.0",
+    "rollup": "^2.60.1",
+    "rollup-plugin-terser": "^7.0.2",
+    "serve-static": "^1.14.1",
+    "ts-loader": "^9.2.6",
+    "tslib": "^2.3.1",
+    "typescript": "^4.5.2",
+    "webpack": "^5.64.4"
+  }
+}

@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "outDir": "./dist/",
+        "sourceMap": true,
+        "inlineSources": true,
+        "strict": true,
+        "noImplicitReturns": true,
+        "forceConsistentCasingInFileNames": true,
+        "module": "es2020",
+        "target": "es2020"
+    },
+    "include": ["./src/"]
+}
