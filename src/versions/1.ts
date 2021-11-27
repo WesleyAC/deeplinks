@@ -27,12 +27,17 @@ import { cyrb53 } from '../util/cyrb53';
 //
 // (you may mix and match either of the previous two formats described)
 
+// See https://dom.spec.whatwg.org/#interface-node
+// The minifier isn't smart enough to know this, so do it ourselves and save
+// the, uh 26 bytes...
+const TEXT_NODE = 3;
+
 function hashNode(n: Text): string {
   return Base64.fromNumber(cyrb53(n.wholeText));
 }
 
 function findTextNode(node: Node, first: boolean): Text | null {
-  if (node.nodeType == Node.TEXT_NODE) {
+  if (node.nodeType == TEXT_NODE) {
     return node as Text;
   } else {
     const children = [...node.childNodes];
@@ -50,7 +55,7 @@ function findTextNode(node: Node, first: boolean): Text | null {
 }
 
 function normalizeSelectionPart(node: Node, offset: number, first: boolean): [string, number] {
-  if (node.nodeType == Node.TEXT_NODE) {
+  if (node.nodeType == TEXT_NODE) {
     return [hashNode(node as Text), offset];
   } else {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
