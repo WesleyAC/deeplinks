@@ -14,7 +14,10 @@ function selectRanges(ranges: Range[]) {
 
 if (typeof(Range) !== 'undefined') {
   document.addEventListener('DOMContentLoaded', () => {
-    document.addEventListener('selectionchange', v1.handleSelectionChange);
+    document.addEventListener('selectionchange', () => {
+      const hash = v1.selectionToHash(document.getSelection() as Selection);
+      history.replaceState(null, '', hash ?? window.location.pathname);
+    });
 
     const hash = window.location.hash.slice(1);
     if (hash && document.getElementById(hash) === null) {

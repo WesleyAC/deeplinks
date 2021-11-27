@@ -59,12 +59,11 @@ function normalizeSelectionPart(node: Node, offset: number, first: boolean): [st
   }
 }
 
-export function handleSelectionChange() {
-  const range = window.getSelection()?.getRangeAt(0);
+export function selectionToHash(selection: Selection): string | null {
+  const range = selection.getRangeAt(0);
 
   if (!range || range.collapsed) {
-    history.replaceState(null, '', window.location.pathname);
-    return;
+    return null;
   }
 
   const [startHash, startOffset] = normalizeSelectionPart(range.startContainer, range.startOffset, true);
@@ -75,7 +74,8 @@ export function handleSelectionChange() {
   } else {
     hash = `#1${startHash}:${startOffset}.${endHash}:${endOffset}`;
   }
-  history.replaceState(null, '', hash);
+
+  return hash;
 }
 
 function getRangeFromHashPart(hashpart: string): Range {
