@@ -39,7 +39,6 @@ Then, add this snippet to pages you want to enable deep-linking on:
 ## Known bugs
 
 * If multiple elements have the same textual contents, they are not disambiguated.
-* [Multi-select](https://developer.mozilla.org/en-US/docs/Web/API/Selection/rangeCount) is not really handled.
 
 ## How it works
 

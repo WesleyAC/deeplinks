@@ -10,17 +10,22 @@ import { cyrb53 } from '../util/cyrb53';
 // offsets into the text in the node. nodes must be text nodes. the hash that
 // comes first in the url must also be first in the document.
 //
+// the main problem this has is that if there are multiple text nodes with the
+// same value, there's no differentiation between them. it's also not very
+// robust to the text changing — a single character difference in a paragraph
+// of text can cause all links to that paragraph to break, even if the section
+// being linked to didn't change!
+//
 // the dot after the version number is optional. in the case where both hashes
 // are the same, the following format may be used instead:
 //
 // 1.[hash]:[offset]:[offset]
 //
-// this has a couple problems. the main one is that if there are multiple text
-// nodes with the same value, there's no differentiation between them. it's
-// also not very robust to the text changing — a single character difference in
-// a paragraph of text can cause all links to that paragraph to break, even if
-// the section being linked to didn't change! finally, it only supports a
-// single selection, despite firefox implementing multiselect.
+// multi-select is also supported, with the following format:
+//
+// 1.[hash]:[offset].[hash]:[offset],[hash]:[offset]:[offset]
+//
+// (you may mix and match either of the previous two formats described)
 
 function hashNode(n: Text): string {
   return Base64.fromNumber(cyrb53(n.wholeText));
@@ -100,9 +105,15 @@ function getRangeFromHashPart(hashpart: string): Range {
 
 export function loadHash(hash: string) {
   const hashSansVersion = hash.replace(/^1\.?/gm, '');
-  const range = getRangeFromHashPart(hashSansVersion);
+  const hashParts = hashSansVersion.split(',');
+  const ranges = hashParts.map(getRangeFromHashPart);
   const selection = document.getSelection() as Selection;
   selection.removeAllRanges();
-  selection.addRange(range);
-  range.startContainer.parentElement?.scrollIntoView();
+  for (const range of ranges) {
+    selection.addRange(range);
+  }
+  ranges[0].startContainer.parentElement?.scrollIntoView();
+  if (selection.rangeCount !== ranges.length) {
+    alert('You opened a link that highlighted multiple selections of text, but your browser does not support this — only the first selection is being shown.');
+  }
 }
