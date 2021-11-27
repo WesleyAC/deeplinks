@@ -60,22 +60,24 @@ function normalizeSelectionPart(node: Node, offset: number, first: boolean): [st
 }
 
 export function selectionToHash(selection: Selection): string | null {
-  const range = selection.getRangeAt(0);
+  const hashes = [];
+  for (let i = 0; i < selection.rangeCount; i++) {
+    const range = selection.getRangeAt(i);
 
-  if (!range || range.collapsed) {
-    return null;
+    if (!range || range.collapsed) {
+      continue;
+    }
+
+    const [startHash, startOffset] = normalizeSelectionPart(range.startContainer, range.startOffset, true);
+    const [endHash, endOffset] = normalizeSelectionPart(range.endContainer, range.endOffset, false);
+    if (startHash === endHash) {
+      hashes.push(`${startHash}:${startOffset}:${endOffset}`);
+    } else {
+      hashes.push(`${startHash}:${startOffset}.${endHash}:${endOffset}`);
+    }
   }
 
-  const [startHash, startOffset] = normalizeSelectionPart(range.startContainer, range.startOffset, true);
-  const [endHash, endOffset] = normalizeSelectionPart(range.endContainer, range.endOffset, false);
-  let hash;
-  if (startHash === endHash) {
-    hash = `#1${startHash}:${startOffset}:${endOffset}`;
-  } else {
-    hash = `#1${startHash}:${startOffset}.${endHash}:${endOffset}`;
-  }
-
-  return hash;
+  return hashes.length === 0 ? null : `#1${hashes.join()}`;
 }
 
 function getRangeFromHashPart(hashpart: string): Range {
