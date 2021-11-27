@@ -8,10 +8,10 @@ test('check server is running', async ({ page }) => {
   await expect(page).toHaveTitle('deeplinks e2e test');
 });
 
-async function testHash(page: Page, hash: string, testFn: (Page) => void) {
-  console.log(`Testing hash: ${hash}`);
+async function testFragment(page: Page, fragment: string, testFn: (Page) => void) {
+  console.log(`Testing fragment: ${fragment}`);
   await page.goto('about:blank');
-  await page.goto(url + hash);
+  await page.goto(url + fragment);
   await page.waitForLoadState('domcontentloaded');
   await testFn(page);
 }
@@ -28,13 +28,13 @@ test('misc', async ({ page }) => {
   page.on('dialog', async () => {
     throw 'Unexpected dialog box';
   });
-  for (const hash of Object.keys(tests)) {
-    const expected = tests[hash];
+  for (const fragment of Object.keys(tests)) {
+    const expected = tests[fragment];
     const testFn = async (page) => {
       const selected = await page.evaluate('document.getSelection().toString()');
       expect(selected).toBe(expected);
     };
-    await testHash(page, hash, testFn);
+    await testFragment(page, fragment, testFn);
   }
 });
 
@@ -51,8 +51,8 @@ test('multiselect', async ({ page }, testInfo) => {
       await dialog.dismiss();
     }
   });
-  for (const hash of Object.keys(tests)) {
-    const expected = tests[hash];
+  for (const fragment of Object.keys(tests)) {
+    const expected = tests[fragment];
     const testFn = async (page) => {
       const selected = await page.evaluate('document.getSelection().toString()');
       if (multiselectKnownGoodBrowsers.includes(testInfo.project.name)) {
@@ -61,8 +61,8 @@ test('multiselect', async ({ page }, testInfo) => {
         expect([expected.join(''), expected[0]]).toContain(selected);
       }
       // Even if multiselect wasn't supported, don't rewrite URL
-      expect(page.url()).toBe(url + hash);
+      expect(page.url()).toBe(url + fragment);
     };
-    await testHash(page, hash, testFn);
+    await testFragment(page, fragment, testFn);
   }
 });

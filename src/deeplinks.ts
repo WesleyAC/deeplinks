@@ -13,11 +13,11 @@ function selectRanges(ranges: Range[]) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  const hash = location.hash.slice(1);
+  const fragment = location.hash.slice(1);
 
-  if (hash && document.getElementById(hash) === null) {
-    if (hash[0] === '1') {
-      selectRanges(v1.hashToRangeList(hash));
+  if (fragment && document.getElementById(fragment) === null) {
+    if (fragment[0] === '1') {
+      selectRanges(v1.fragmentToRangeList(fragment));
     }
   }
 
@@ -31,8 +31,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // for instance.
   setTimeout(() => {
     document.addEventListener('selectionchange', () => {
-      const hash = v1.selectionToHash(document.getSelection() as Selection);
-      history.replaceState(null, '', hash ?? location.pathname);
+      const fragment = v1.selectionToFragment(document.getSelection() as Selection);
+      history.replaceState(null, '', fragment ?? location.pathname);
     });
   }, 0);
 });

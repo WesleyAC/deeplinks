@@ -66,8 +66,8 @@ function normalizeSelectionPart(node: Node, offset: number, first: boolean): [st
   }
 }
 
-export function selectionToHash(selection: Selection): string | null {
-  const hashes = [];
+export function selectionToFragment(selection: Selection): string | null {
+  const fragmentParts = [];
   for (let i = 0; i < selection.rangeCount; i++) {
     const range = selection.getRangeAt(i);
 
@@ -78,17 +78,17 @@ export function selectionToHash(selection: Selection): string | null {
     const [startHash, startOffset] = normalizeSelectionPart(range.startContainer, range.startOffset, true);
     const [endHash, endOffset] = normalizeSelectionPart(range.endContainer, range.endOffset, false);
     if (startHash === endHash) {
-      hashes.push(`${startHash}:${startOffset}:${endOffset}`);
+      fragmentParts.push(`${startHash}:${startOffset}:${endOffset}`);
     } else {
-      hashes.push(`${startHash}:${startOffset}.${endHash}:${endOffset}`);
+      fragmentParts.push(`${startHash}:${startOffset}.${endHash}:${endOffset}`);
     }
   }
 
-  return hashes.length === 0 ? null : `#1${hashes.join()}`;
+  return fragmentParts.length === 0 ? null : `#1${fragmentParts.join()}`;
 }
 
-function getRangeFromHashPart(hashpart: string): Range {
-  const split = hashpart.split('.').map((x) => x.split(':'));
+function getRangeFromFragmentPart(fragmentPart: string): Range {
+  const split = fragmentPart.split('.').map((x) => x.split(':'));
   let startHash, startOffset, endHash, endOffset;
   if (split.length == 1) {
     [[startHash, startOffset, endOffset]] = split;
@@ -112,9 +112,9 @@ function getRangeFromHashPart(hashpart: string): Range {
   return range;
 }
 
-export function hashToRangeList(hash: string) {
-  const hashSansVersion = hash.replace(/^1\.?/gm, '');
-  const hashParts = hashSansVersion.split(',');
-  const ranges = hashParts.map(getRangeFromHashPart);
+export function fragmentToRangeList(fragment: string) {
+  const fragmentSansVersion = fragment.replace(/^1\.?/gm, '');
+  const fragmentParts = fragmentSansVersion.split(',');
+  const ranges = fragmentParts.map(getRangeFromFragmentPart);
   return ranges;
 }
