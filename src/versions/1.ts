@@ -112,9 +112,6 @@ function getRangeFromFragmentPart(fragmentPart: string): Range {
   return range;
 }
 
-export function fragmentToRangeList(fragment: string) {
-  const fragmentSansVersion = fragment.replace(/^1\.?/gm, '');
-  const fragmentParts = fragmentSansVersion.split(',');
-  const ranges = fragmentParts.map(getRangeFromFragmentPart);
-  return ranges;
+export function fragmentToRangeList(fragment: string): Range[] {
+  return fragment.replace(/^1\.?/gm, '').split(',').map(getRangeFromFragmentPart);
 }
