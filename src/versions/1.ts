@@ -31,6 +31,8 @@ import { cyrb53 } from '../util/cyrb53';
 // The minifier isn't smart enough to know this, so do it ourselves and save
 // the, uh 26 bytes...
 const TEXT_NODE = 3;
+// Same as above, see https://dom.spec.whatwg.org/#interface-nodefilter
+const NODEFILTER_SHOW_TEXT = 0x04;
 
 function hashNode(n: Text): string {
   return Base64.fromNumber(cyrb53(n.wholeText));
@@ -96,7 +98,7 @@ function getRangeFromHashPart(hashpart: string): Range {
   }
   let startNode, endNode;
   // eslint-disable-next-line prefer-const
-  let node, walk = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null);
+  let node, walk = document.createTreeWalker(document.body, NODEFILTER_SHOW_TEXT, null);
   while (node = walk.nextNode() as Text) { // eslint-disable-line no-cond-assign
     const hash = hashNode(node);
     if (hash == startHash) { startNode = node; }
