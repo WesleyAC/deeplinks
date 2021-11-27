@@ -6,9 +6,9 @@ import { cyrb53 } from '../util/cyrb53';
 //
 // the hashes are the hash of the text content of the selected node. the hash
 // formula is cyrb53, which is just a thing some rando on stack overflow made,
-// base64-encoded. the offsets are character offsets into the text in the node.
-// nodes must be text nodes. the hash that comes first in the url must also be
-// first in the document.
+// base64-encoded (with a non-standard alphabet). the offsets are character
+// offsets into the text in the node. nodes must be text nodes. the hash that
+// comes first in the url must also be first in the document.
 //
 // the dot after the version number is optional. in the case where both hashes
 // are the same, the following format may be used instead:

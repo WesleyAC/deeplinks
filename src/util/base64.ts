@@ -1,5 +1,6 @@
 // https://stackoverflow.com/questions/6213227/fastest-way-to-convert-a-number-to-radix-64-in-javascript
 // modified for typescript/general modernization/aesthetics/etc
+// the alphabet has also been changed to use more reasonable characters for a url.
 
 export const Base64 = {
   _Rixits: '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_',
