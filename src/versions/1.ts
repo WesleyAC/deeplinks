@@ -92,7 +92,7 @@ function getRangeFromFragmentPart(fragmentPart: string): Range {
   let startHash, startOffset, endHash, endOffset;
   if (split.length == 1) {
     [[startHash, startOffset, endOffset]] = split;
-    [[endHash]] = split;
+    endHash = startHash;
   } else {
     [[startHash, startOffset], [endHash, endOffset]] = split;
   }
