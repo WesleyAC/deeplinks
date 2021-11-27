@@ -14,16 +14,27 @@ function selectRanges(ranges: Range[]) {
 
 if (typeof(Range) !== 'undefined') {
   document.addEventListener('DOMContentLoaded', () => {
-    document.addEventListener('selectionchange', () => {
-      const hash = v1.selectionToHash(document.getSelection() as Selection);
-      history.replaceState(null, '', hash ?? window.location.pathname);
-    });
-
     const hash = window.location.hash.slice(1);
+
     if (hash && document.getElementById(hash) === null) {
       if (hash[0] === '1') {
         selectRanges(v1.hashToRangeList(hash));
       }
     }
+
+    // This is in a setTimeout to ensure that the code above does all of its
+    // selection-changing before this executes. This ensures that we don't
+    // clobber changes that we just made (for instance, in the case of a user
+    // on Chrome attempting to open a multiselect url).
+    //
+    // This also allows us to make more careful decisions about rewriting urls
+    // in general — we can explicitly decide when and how to do version bumps,
+    // for instance.
+    setTimeout(() => {
+      document.addEventListener('selectionchange', () => {
+        const hash = v1.selectionToHash(document.getSelection() as Selection);
+        history.replaceState(null, '', hash ?? window.location.pathname);
+      })
+    }, 0);
   });
 }

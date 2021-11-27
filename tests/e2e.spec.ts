@@ -60,6 +60,8 @@ test('multiselect', async ({ page }, testInfo) => {
       } else {
         expect([expected.join(''), expected[0]]).toContain(selected);
       }
+      // Even if multiselect wasn't supported, don't rewrite URL
+      expect(page.url()).toBe(url + hash);
     };
     await testHash(page, hash, testFn);
   }
