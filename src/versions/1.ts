@@ -73,15 +73,14 @@ export function handleSelectionChange() {
   history.replaceState(null, '', hash);
 }
 
-export function loadHash(hash: string) {
-  const split = hash.replace(/^1\.?/gm, '').split('.').map((x) => x.split(':'));
+function getRangeFromHashPart(hashpart: string): Range {
+  const split = hashpart.split('.').map((x) => x.split(':'));
   let startHash, startOffset, endHash, endOffset;
   if (split.length == 1) {
     [[startHash, startOffset, endOffset]] = split;
     [[endHash]] = split;
   } else {
     [[startHash, startOffset], [endHash, endOffset]] = split;
-
   }
   let startNode, endNode;
   // eslint-disable-next-line prefer-const
@@ -91,8 +90,19 @@ export function loadHash(hash: string) {
     if (hash == startHash) { startNode = node; }
     if (hash == endHash) { endNode = node; }
   }
+  const range = new Range();
   if (startNode && endNode) {
-    document.getSelection()?.setBaseAndExtent(startNode, parseInt(startOffset), endNode, parseInt(endOffset));
-    startNode.parentElement?.scrollIntoView();
+    range.setStart(startNode, parseInt(startOffset));
+    range.setEnd(endNode, parseInt(endOffset));
   }
+  return range;
+}
+
+export function loadHash(hash: string) {
+  const hashSansVersion = hash.replace(/^1\.?/gm, '');
+  const range = getRangeFromHashPart(hashSansVersion);
+  const selection = document.getSelection() as Selection;
+  selection.removeAllRanges();
+  selection.addRange(range);
+  range.startContainer.parentElement?.scrollIntoView();
 }
