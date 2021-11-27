@@ -54,6 +54,25 @@ function normalizeSelectionPart(node: Node, offset: number, first: boolean): [st
   }
 }
 
+export function handleSelectionChange() {
+  const range = window.getSelection()?.getRangeAt(0);
+
+  if (!range || range.collapsed) {
+    history.replaceState(null, '', window.location.pathname);
+    return;
+  }
+
+  const [startHash, startOffset] = normalizeSelectionPart(range.startContainer, range.startOffset, true);
+  const [endHash, endOffset] = normalizeSelectionPart(range.endContainer, range.endOffset, false);
+  let hash;
+  if (startHash === endHash) {
+    hash = `#1${startHash}:${startOffset}:${endOffset}`;
+  } else {
+    hash = `#1${startHash}:${startOffset}.${endHash}:${endOffset}`;
+  }
+  history.replaceState(null, '', hash);
+}
+
 export function loadHash(hash: string) {
   const split = hash.replace(/^1\.?/gm, '').split('.').map((x) => x.split(':'));
   let startHash, startOffset, endHash, endOffset;
@@ -76,23 +95,4 @@ export function loadHash(hash: string) {
     document.getSelection()?.setBaseAndExtent(startNode, parseInt(startOffset), endNode, parseInt(endOffset));
     startNode.parentElement?.scrollIntoView();
   }
-}
-
-export function handleSelectionChange() {
-  const range = window.getSelection()?.getRangeAt(0);
-
-  if (!range || range.collapsed) {
-    history.replaceState(null, '', window.location.pathname);
-    return;
-  }
-
-  const [startHash, startOffset] = normalizeSelectionPart(range.startContainer, range.startOffset, true);
-  const [endHash, endOffset] = normalizeSelectionPart(range.endContainer, range.endOffset, false);
-  let hash;
-  if (startHash === endHash) {
-    hash = `#1${startHash}:${startOffset}:${endOffset}`;
-  } else {
-    hash = `#1${startHash}:${startOffset}.${endHash}:${endOffset}`;
-  }
-  history.replaceState(null, '', hash);
 }
