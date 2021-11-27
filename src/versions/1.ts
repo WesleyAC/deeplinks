@@ -103,17 +103,9 @@ function getRangeFromHashPart(hashpart: string): Range {
   return range;
 }
 
-export function loadHash(hash: string) {
+export function hashToRangeList(hash: string) {
   const hashSansVersion = hash.replace(/^1\.?/gm, '');
   const hashParts = hashSansVersion.split(',');
   const ranges = hashParts.map(getRangeFromHashPart);
-  const selection = document.getSelection() as Selection;
-  selection.removeAllRanges();
-  for (const range of ranges) {
-    selection.addRange(range);
-  }
-  ranges[0].startContainer.parentElement?.scrollIntoView();
-  if (selection.rangeCount !== ranges.length) {
-    alert('You opened a link that highlighted multiple selections of text, but your browser does not support this — only the first selection is being shown.');
-  }
+  return ranges;
 }
