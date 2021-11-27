@@ -13,7 +13,7 @@ function selectRanges(ranges: Range[]) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  const hash = window.location.hash.slice(1);
+  const hash = location.hash.slice(1);
 
   if (hash && document.getElementById(hash) === null) {
     if (hash[0] === '1') {
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setTimeout(() => {
     document.addEventListener('selectionchange', () => {
       const hash = v1.selectionToHash(document.getSelection() as Selection);
-      history.replaceState(null, '', hash ?? window.location.pathname);
+      history.replaceState(null, '', hash ?? location.pathname);
     });
   }, 0);
 });
