@@ -36,10 +36,6 @@ Then, add this snippet to pages you want to enable deep-linking on:
 <script type="module" src="/deeplinks/deeplinks.js"></script>
 ```
 
-## Known bugs
-
-* If multiple elements have the same textual contents, they are not disambiguated.
-
 ## How it works
 
 The fragment identifier is made of a hash of the contents of the [text node](https://developer.mozilla.org/en-US/docs/Web/API/Text) in the DOM. For instance, imagine the following html:

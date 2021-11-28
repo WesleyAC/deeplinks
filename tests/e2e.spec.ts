@@ -25,8 +25,15 @@ test('misc', async ({ page }) => {
     '#16SHlbtTkC:4.CBcmrfV8L:4': ['links.js e2e', 'selecting parent/child nodes'],
     '#1EdoNr3xj_:0.BLkIVltu0:14': ['uh oh\nidentical text', 'multiple identical nodes, but no disambiguation - start node is unique'],
     '#17whfBu1TH:0.TxIWFV5Nq:4': ['identical text nodes?\nhmmm', 'multiple identical nodes, but no disambiguation - end node is unique'],
-    '#1EdoNr3xj_:0.7whfBu1TH:21~1': ['uh oh\nidentical text nodes\nidentical text nodes?\nidentical text nodes\nidentical text nodes?', 'multiple identical nodes, with disambiguation - start node is unique'],
-    '#1BLkIVltu0:0~1.TxIWFV5Nq:4': ['identical text nodes\nidentical text nodes?\nidentical text nodes\nidentical text nodes?\nhmmm', 'multiple identical nodes, with disambiguation - end node is unique'],
+    '#1EdoNr3xj_:0.7whfBu1TH:21~seeeee~0~2': ['uh oh\nidentical text nodes\nidentical text nodes?\nidentical text nodes\nidentical text nodes?', 'multiple identical nodes, with disambiguation - start node is unique'],
+    '#1BLkIVltu0:0.TxIWFV5Nq:4~ssssse~3~5': ['identical text nodes\nidentical text nodes?\nidentical text nodes\nidentical text nodes?\nhmmm', 'multiple identical nodes, with disambiguation - end node is unique'],
+    '#1BLkIVltu0:0.7whfBu1TH:21~sesesesese~2~7': ['identical text nodes\nidentical text nodes?\nidentical text nodes\nidentical text nodes?\nidentical text nodes\nidentical text nodes?', 'multiple identical nodes, with disambiguation, both start and end nodes are ambiguous'],
+    '#1BLkIVltu0:0:20~sssss~0~1': ['identical text nodes\nidentical text nodes?\nidentical text nodes', 'short fragment with ambiguous nodes, start and end node are different'],
+    '#1BLkIVltu0:0:20~sssss~1': ['identical text nodes', 'short fragment with ambiguous nodes, start and end node are the same'],
+    '#1.W00000001:0.W00000001:5': ['', 'nonexistent node'],
+    '#1.W00000001:0.W00000002:5': ['', 'nonexistent nodes'],
+    '#1W00000001:0:5': ['', 'nonexistent node (short version)'],
+    '#1.W00000001:0.W00000002:5~sse~1~2': ['', 'nonexistent nodes, with disambiguation'],
   };
   page.on('dialog', async () => {
     throw 'Unexpected dialog box';

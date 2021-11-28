@@ -5,10 +5,9 @@ import { cyrb53 } from '../util/cyrb53';
 //
 // fragment  → "1", [ "." ], selection, { ",",  selection } ;
 // selection → sel-long | sel-short;
-// sel-long  → hash, ":", offset, ".", hash, ":", offset |
-//             hash, ":", offset, "~", offset, ".", hash, ":", offset |
-//             hash, ":", offset, ".", hash, ":", offset, "~", offset ;
-// sel-short → hash, ":", offset, ":", offset ;
+// sel-long  → hash, ":", offset, ".", hash, ":", offset, [ dedupe ] ;
+// sel-short → hash, ":", offset, ":", offset, [ "~", dedupe ] ;
+// dedupe    → "~", { "s" | "e" }-, "~", offset, "~", offset ;
 // offset    → { "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" }- ;
 // hash      → { "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" |
 //               "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "J" |
@@ -22,18 +21,6 @@ import { cyrb53 } from '../util/cyrb53';
 // of the text contents of a selected node, as well as a character offset into
 // the text.
 //
-// The reason for the "~" and second offset in the long selection format is to
-// deal with the case where multiple text nodes in the document have the same
-// text contents, and thus the same hash. In that case, the offset after the
-// tilde describes the number of nodes with a given hash that should be skipped
-// (either before or after, depending on whether the offset is attached to the
-// starting node or the ending one)
-//
-// This purposefully does not deal with the case where both the starting and
-// ending node are ambiguous, nor the case where only one node is selected.
-// Those may be dealt with in the future, but they're significantly more
-// complicated.
-//
 // The short selection format is used when both hashes refer to the same node.
 //
 // The hash formula is cyrb53, which is just a thing some rando on stack
@@ -41,12 +28,21 @@ import { cyrb53 } from '../util/cyrb53';
 // a hash can be at most nine characters, since cyrb53 is a 53-bit hash (due to
 // silly javascript fun).
 //
+// The deduplication section of the fragment is used in the case where there
+// are multiple elements on the page with the same contents as the start or end
+// node. It describes the full list of duplicate elements, and which ones are
+// the correct start and end nodes. A "s" or "e" indicates a node with the same
+// hash as the start or end node (respectively). The fist offset is the offset
+// of the start node, and the second offset is the end node. In the case where
+// the start and end nodes are the same, "s" must be used to describe the node
+// (it's possible that in the future, a more condensed version of this will be
+// used that simply uses three integers).
+//
 // The hash that comes first in the url must also be first in the document.
 //
-// This has a few problems — the non-handled ambiguous node cases mentioned
-// above, and the fact tha changing a single character in a long paragraph
-// breaks all links to that paragraph — but it's pretty good for a lot of
-// cases.
+// The main problem this has is that changing a single character in a long
+// paragraph breaks all links to that paragraph, but it works pretty well for a
+// lot of cases.
 
 // See https://dom.spec.whatwg.org/#interface-node
 // The minifier isn't smart enough to know this, so do it ourselves and save
@@ -109,34 +105,27 @@ export function selectionToFragment(selection: Selection): string | null {
 }
 
 function getRangeFromFragmentPart(fragmentPart: string): Range {
-  const split = fragmentPart.split('.').map((x) => x.split(':'));
-  let startHash, startOffset, startDupeOffset = 0, endHash, endOffset, endDupeOffset = 0;
+  const [hashOffsetFragmentPart, dupeString, dupeStartOffset, dupeEndOffset] = fragmentPart.split('~');
+  const split = hashOffsetFragmentPart.split('.').map((x) => x.split(':'));
+  let startHash, startOffset, endHash, endOffset;
   if (split.length == 1) {
     [[startHash, startOffset, endOffset]] = split;
-    [startOffset, endOffset] = [startOffset, endOffset].map(parseFloat);
     endHash = startHash;
   } else {
     [[startHash, startOffset], [endHash, endOffset]] = split;
-    const parseOffsets = (x: string) => x.split('~').map(parseFloat);
-    [startOffset, startDupeOffset] = parseOffsets(startOffset);
-    [endOffset, endDupeOffset] = parseOffsets(endOffset);
   }
+  [startOffset, endOffset] = [startOffset, endOffset].map(parseFloat);
 
   // the boolean represents whether it's a start node (true) or end node (false)
   const nodes: [Text, boolean][] = [];
 
-  let numEndNodes = 0;
-
-  // eslint-disable-next-line prefer-const
-  let node, walk = document.createTreeWalker(document.body, NODEFILTER_SHOW_TEXT, null);
+  const walk = document.createTreeWalker(document.body, NODEFILTER_SHOW_TEXT, null);
+  let node, numEndNodes = 0;
   while (node = walk.nextNode() as Text) { // eslint-disable-line no-cond-assign
     const hash = hashNode(node);
     if (hash == startHash) {
       nodes.push([node, true]);
-    }
-    // will it make things simpler down the line to not append end nodes if
-    // they come before the first start node?
-    if (hash == endHash) {
+    } else if (hash == endHash) {
       nodes.push([node, false]);
       numEndNodes++;
     }
@@ -144,21 +133,24 @@ function getRangeFromFragmentPart(fragmentPart: string): Range {
 
   let startNode, endNode;
 
-  const offset = (endDupeOffset+1) || -(startDupeOffset+1);
-  if (!isNaN(offset)) { // at least one DupeOffset is given
-    const uniqueNodeIndex = nodes.findIndex(e => e[1] == (offset > 0));
-    startNode = nodes[uniqueNodeIndex + ((offset < 0) ? offset : 0)];
-    endNode = nodes[uniqueNodeIndex + ((offset > 0) ? offset : 0)];
+  if (dupeString && nodes.map(n => n[1] ? 's' : 'e').join('') == dupeString) {
+    startNode = nodes[parseInt(dupeStartOffset)];
+    endNode = nodes[parseInt(dupeEndOffset)];
   }
 
   if (!startNode || !endNode) {
-    // If there's more than one end node, start with the start node.  This
-    // ensures that in cases where both nodes are ambiguous, the first pair is
-    // selected.
-    const anchorNodeType = numEndNodes > 1;
-    const anchorNodeIndex = nodes.findIndex(e => e[1] == anchorNodeType);
-    startNode = nodes[anchorNodeType ? anchorNodeIndex : anchorNodeIndex - 1];
-    endNode = nodes[anchorNodeType ? anchorNodeIndex + 1: anchorNodeIndex];
+    if (startHash == endHash) {
+      startNode = nodes[0];
+      endNode = startNode;
+    } else {
+      // If there's more than one end node, start with the start node.  This
+      // ensures that in cases where both nodes are ambiguous, the first pair is
+      // selected.
+      const anchorNodeType = numEndNodes > 1;
+      const anchorNodeIndex = nodes.findIndex(e => e[1] == anchorNodeType);
+      startNode = nodes[anchorNodeType ? anchorNodeIndex : anchorNodeIndex - 1];
+      endNode = nodes[anchorNodeType ? anchorNodeIndex + 1: anchorNodeIndex];
+    }
   }
 
   const range = new Range();
