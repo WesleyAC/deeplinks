@@ -9,7 +9,6 @@ test('check server is running', async ({ page }) => {
 });
 
 async function testFragment(page: Page, fragment: string, testFn: (Page) => void) {
-  console.log(`Testing fragment: ${fragment}`);
   await page.goto('about:blank');
   await page.goto(url + fragment);
   await page.waitForLoadState('domcontentloaded');
@@ -18,32 +17,23 @@ async function testFragment(page: Page, fragment: string, testFn: (Page) => void
 
 test('misc', async ({ page }) => {
   const tests = {
-    // short format, no dot
-    '#1JmqE9nH3Z:121:158': 'valueless until you get the screw out',
-    // short format, with dot
-    '#1.JmqE9nH3Z:121:158': 'valueless until you get the screw out',
-    // long format (but single node), with dot
-    '#1.JmqE9nH3Z:121.JmqE9nH3Z:158': 'valueless until you get the screw out',
-    // long format (but single node), no dot
-    '#1JmqE9nH3Z:121.JmqE9nH3Z:158': 'valueless until you get the screw out',
-    // selecting multiple different nodes, also unicode
-    '#1J9W3o85TQ:12.3EdKovNLr:11': '統一碼 💚💙💜🧡💛💚💙💜🧡💛💚💙💜🧡\n\n🐢🐢',
-    // selecting parent/child nodes
-    '#16SHlbtTkC:4.CBcmrfV8L:4': 'links.js e2e',
-    // multiple identical nodes, but no disambiguation - start node is unique
-    '#1EdoNr3xj_:0.BLkIVltu0:14': 'uh oh\nidentical text',
-    // multiple identical nodes, but no disambiguation - end node is unique
-    '#17whfBu1TH:0.TxIWFV5Nq:4': 'identical text nodes?\nhmmm',
-    // multiple identical nodes, with disambiguation - start node is unique
-    '#1EdoNr3xj_:0.7whfBu1TH:21~1': 'uh oh\nidentical text nodes\nidentical text nodes?\nidentical text nodes\nidentical text nodes?',
-    // multiple identical nodes, with disambiguation - end node is unique
-    '#1BLkIVltu0:0~1.TxIWFV5Nq:4': 'identical text nodes\nidentical text nodes?\nidentical text nodes\nidentical text nodes?\nhmmm',
+    '#1JmqE9nH3Z:121:158': ['valueless until you get the screw out', 'short format, no dot'],
+    '#1.JmqE9nH3Z:121:158': ['valueless until you get the screw out', 'short format, with dot'],
+    '#1.JmqE9nH3Z:121.JmqE9nH3Z:158': ['valueless until you get the screw out', 'long format (but single node), with dot'],
+    '#1JmqE9nH3Z:121.JmqE9nH3Z:158': ['valueless until you get the screw out', 'long format (but single node), no dot'],
+    '#1J9W3o85TQ:12.3EdKovNLr:11': ['統一碼 💚💙💜🧡💛💚💙💜🧡💛💚💙💜🧡\n\n🐢🐢', 'selecting multiple different nodes, also unicode'],
+    '#16SHlbtTkC:4.CBcmrfV8L:4': ['links.js e2e', 'selecting parent/child nodes'],
+    '#1EdoNr3xj_:0.BLkIVltu0:14': ['uh oh\nidentical text', 'multiple identical nodes, but no disambiguation - start node is unique'],
+    '#17whfBu1TH:0.TxIWFV5Nq:4': ['identical text nodes?\nhmmm', 'multiple identical nodes, but no disambiguation - end node is unique'],
+    '#1EdoNr3xj_:0.7whfBu1TH:21~1': ['uh oh\nidentical text nodes\nidentical text nodes?\nidentical text nodes\nidentical text nodes?', 'multiple identical nodes, with disambiguation - start node is unique'],
+    '#1BLkIVltu0:0~1.TxIWFV5Nq:4': ['identical text nodes\nidentical text nodes?\nidentical text nodes\nidentical text nodes?\nhmmm', 'multiple identical nodes, with disambiguation - end node is unique'],
   };
   page.on('dialog', async () => {
     throw 'Unexpected dialog box';
   });
   for (const fragment of Object.keys(tests)) {
-    const expected = tests[fragment];
+    const [expected, message] = tests[fragment];
+    console.log(`testing ${message}`);
     const testFn = async (page) => {
       const selected = await page.evaluate('document.getSelection().toString()');
       expect(selected).toBe(expected);
@@ -67,6 +57,7 @@ test('multiselect', async ({ page }, testInfo) => {
   });
   for (const fragment of Object.keys(tests)) {
     const expected = tests[fragment];
+    console.log(`testing ${fragment}`);
     const testFn = async (page) => {
       const selected = await page.evaluate('document.getSelection().toString()');
       if (multiselectKnownGoodBrowsers.includes(testInfo.project.name)) {
