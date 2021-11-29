@@ -1,4 +1,4 @@
-// https://stackoverflow.com/questions/6213227/fastest-way-to-convert-a-number-to-radix-64-in-javascript
+// https://stackoverflow.com/questions/6213227/fastest-way-to-convert-a-number-to-radix-64-in-javascript/6573119#6573119
 // modified for typescript/general modernization/aesthetics/etc
 // the alphabet has also been changed to use more reasonable characters for a url.
 
@@ -12,7 +12,7 @@ const _rixits = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-
 // representing the mantissae and exponents separately, or some other
 // possibility. For now, bail
 export function fromNumber(number: number): string {
-  if (isNaN(number) || number === null || number === Number.POSITIVE_INFINITY || number < 0) {
+  if (isNaN(number) || number === null || number === Infinity || number < 0) {
     throw 'invalid input';
   }
 
