@@ -2,9 +2,9 @@
 // modified for typescript/general modernization/aesthetics/etc
 // the alphabet has also been changed to use more reasonable characters for a url.
 
-export const Base64 = {
-  _Rixits: '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_',
+const _rixits = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_';
 
+export const Base64 = {
   // This cannot handle negative numbers and only works on the integer part,
   // discarding the fractional part. Doing better means deciding on whether
   // you're just representing the subset of javascript numbers of
@@ -17,12 +17,11 @@ export const Base64 = {
       throw 'invalid input';
     }
 
-    let rixit; // like 'digit', only in some non-decimal radix
+    let result = '', rixit; // like 'digit', only in some non-decimal radix
     number = Math.floor(number);
-    let result = '';
     for (;;) {
       rixit = number % 64;
-      result = this._Rixits.charAt(rixit) + result;
+      result = _rixits.charAt(rixit) + result;
       number = Math.floor(number / 64);
 
       if (number == 0) { break; }
@@ -34,7 +33,7 @@ export const Base64 = {
     let result = 0;
     const rixits = string.split('');
     for (let e = 0; e < rixits.length; e++) {
-      result = (result * 64) + this._Rixits.indexOf(rixits[e]);
+      result = (result * 64) + _rixits.indexOf(rixits[e]);
     }
     return result;
   }
