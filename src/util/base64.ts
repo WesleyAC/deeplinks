@@ -12,7 +12,7 @@ const _rixits = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-
 // representing the mantissae and exponents separately, or some other
 // possibility. For now, bail
 export function fromNumber(number: number): string {
-  if (isNaN(number) || number === null || number === Infinity || number < 0) {
+  if (isNaN(number) || number === Infinity || number < 0) {
     throw 'invalid input';
   }
 
