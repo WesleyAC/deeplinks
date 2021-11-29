@@ -3,11 +3,6 @@ import { test, expect } from '@playwright/test';
 
 const url = `http://localhost:${port}/tests/html/e2e.html`;
 
-test('check server is running', async ({ page }) => {
-  await page.goto(url);
-  await expect(page).toHaveTitle('deeplinks e2e test');
-});
-
 async function testFragment(page: Page, fragment: string, testFn: (Page) => void) {
   await page.goto('about:blank');
   await page.goto(url + fragment);

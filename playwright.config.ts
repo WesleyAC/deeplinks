@@ -1,7 +1,13 @@
+import { port } from './tests/config';
 import { PlaywrightTestConfig, devices } from '@playwright/test';
 
 const config: PlaywrightTestConfig = {
-  globalSetup: './tests/setup',
+  webServer: {
+    command: `python3 -m http.server ${port}`,
+    port: port,
+    timeout: 1000,
+    reuseExistingServer: true,
+  },
   forbidOnly: !!process.env.CI,
   retries: 0,
   use: {
