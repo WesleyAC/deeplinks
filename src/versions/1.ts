@@ -1,4 +1,4 @@
-import { Base64 } from '../util/base64';
+import { fromNumber } from '../util/base64';
 import { cyrb53 } from '../util/cyrb53';
 
 // Version 1 Fragment Format (UNSTABLE)
@@ -52,7 +52,7 @@ const TEXT_NODE = 3;
 const NODEFILTER_SHOW_TEXT = 0x04;
 
 function hashNode(n: Text): string {
-  return Base64.fromNumber(cyrb53(n.wholeText));
+  return fromNumber(cyrb53(n.wholeText));
 }
 
 function findTextNode(node: Node, first: boolean): Text | null {
