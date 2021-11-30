@@ -6,7 +6,7 @@ The fragment identifier is made of a hash of the contents of the [text node](htt
 <span>Example text, with some <strong>bold</strong> and <em>italics</em>!</span>
 ```
 
-If the user selected starting at the word `text` and ending at the word `italics` (but not including the exclamation mark), the fragment identifier would contain two hashes: one of the string `Example text with some `, and the other of `italics`. It would also contain two offsets: 8 for the index of the start of the selection (`text` starts at position 8 in the string `Example text, with some `), and 7 for the end of the selection in the sting `italics`. There is also a version number, which is used to that the exact format can change as needed, while still supporting old links.
+If the user selected starting at the word `text` and ending at the word `italics` (but not including the exclamation mark), the fragment identifier would contain two hashes: one of the string `Example text with some `, and the other of `italics`. It would also contain two offsets: 8 for the index of the start of the selection (`text` starts at position 8 in the string `Example text, with some `), and 7 for the end of the selection in the sting `italics`. There is also a version number, which is used so that the exact format can change as needed, while still supporting old links.
 
 This has some obvious drawbacks — if you have very large paragraphs, changing any text within them will break all links to that paragraph. I have some ideas for reasonable solutions to this, but haven't started implementing them yet.
 
