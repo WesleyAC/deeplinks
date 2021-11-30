@@ -16,7 +16,7 @@ import { cyrb53 } from '../util/cyrb53';
 //               "e" | "f" | "g" | "h" | "i" | "j" | "k" | "l" | "m" | "n" |
 //               "o" | "p" | "q" | "r" | "s" | "t" | "u" | "v" | "w" | "x" |
 //               "y" | "z" | "-" | "_" }- ;
-// 
+//
 // A fragment describes a list of selections. A selection is stored as a hash
 // of the text contents of a selected node, as well as a character offset into
 // the text.

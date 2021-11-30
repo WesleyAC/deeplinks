@@ -39,5 +39,6 @@ module.exports = {
     'no-useless-concat': 'error',
     'no-useless-return': 'error',
     'comma-dangle': ['error', 'always-multiline'],
+    'no-trailing-spaces': 'error',
   }
 };
