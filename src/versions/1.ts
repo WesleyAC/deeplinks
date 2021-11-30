@@ -83,21 +83,22 @@ function normalizeSelectionPart(node: Node, offset: number, first: boolean): [st
   }
 }
 
+function rangeToFragmentPart(range: Range): string | null {
+  const [startHash, startOffset] = normalizeSelectionPart(range.startContainer, range.startOffset, true);
+  const [endHash, endOffset] = normalizeSelectionPart(range.endContainer, range.endOffset, false);
+  if (startHash === endHash) {
+    return `${startHash}:${startOffset}:${endOffset}`;
+  } else {
+    return `${startHash}:${startOffset}.${endHash}:${endOffset}`;
+  }
+}
+
 export function selectionToFragment(selection: Selection): string | null {
   const fragmentParts = [];
   for (let i = 0; i < selection.rangeCount; i++) {
     const range = selection.getRangeAt(i);
-
-    if (!range || range.collapsed) {
-      continue;
-    }
-
-    const [startHash, startOffset] = normalizeSelectionPart(range.startContainer, range.startOffset, true);
-    const [endHash, endOffset] = normalizeSelectionPart(range.endContainer, range.endOffset, false);
-    if (startHash === endHash) {
-      fragmentParts.push(`${startHash}:${startOffset}:${endOffset}`);
-    } else {
-      fragmentParts.push(`${startHash}:${startOffset}.${endHash}:${endOffset}`);
+    if (!range.collapsed) {
+      fragmentParts.push(rangeToFragmentPart(range));
     }
   }
 
