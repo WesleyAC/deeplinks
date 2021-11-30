@@ -4,7 +4,7 @@
 
 Users can select text on the site as the normally would, and when they do, the [fragment identifier](https://en.wikipedia.org/wiki/URI_fragment) (the thing that comes after the `#` in the URL) changes. If they want to share the text they have selected, they simply copy the URL, including the fragment identifier. When someone else visits that URL, the same bit of text will be selected and scrolled into view.
 
-That description makes it sound a little complicated, but it's actually pretty simple and intuitive once you start playing with it — go check it out!
+That description makes it sound a little complicated, but it's actually pretty simple and intuitive once you start playing with it — go check it out! If you're interested in knowing the details of how it works under the hood, check out [`docs/design/`](/docs/design).
 
 ## Goals
 
@@ -36,17 +36,3 @@ Then, add this snippet to pages you want to enable deep-linking on:
 ```html
 <script type="module" src="/deeplinks/deeplinks.js"></script>
 ```
-
-## How it works
-
-The fragment identifier is made of a hash of the contents of the [text node](https://developer.mozilla.org/en-US/docs/Web/API/Text) in the DOM. For instance, imagine the following html:
-
-```html
-<span>Example text, with some <strong>bold</strong> and <em>italics</em>!</span>
-```
-
-If the user selected starting at the word `text` and ending at the word `italics` (but not including the exclamation mark), the fragment identifier would contain two hashes: one of the string `Example text with some `, and the other of `italics`. It would also contain two offsets: 8 for the index of the start of the selection (`text` starts at position 8 in the string `Example text, with some `), and 7 for the end of the selection in the sting `italics`. There is also a version number, which is used to that the exact format can change as needed, while still supporting old links.
-
-This has some obvious drawbacks — if you have very large paragraphs, changing any text within them will break all links to that paragraph. I have some ideas for reasonable solutions to this, but haven't started implementing them yet.
-
-The exact details of the hashing and format are unimportant, but are commented in the code for the curious.
