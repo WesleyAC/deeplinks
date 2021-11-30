@@ -55,54 +55,62 @@ function hashNode(n: Text): string {
   return fromNumber(cyrb53(n.wholeText));
 }
 
-function findTextNode(node: Node, first: boolean): Text | null {
-  if (node.nodeType == TEXT_NODE) {
-    return node as Text;
-  } else {
-    const children = [...node.childNodes];
-    if (!first) {
-      children.reverse();
-    }
-    for (const child of children) {
-      const result = findTextNode(child, first);
-      if (result) {
-        return result;
-      }
-    }
-  }
-  return null;
-}
-
-function normalizeSelectionPart(node: Node, offset: number, first: boolean): [string, number] {
-  if (node.nodeType == TEXT_NODE) {
-    return [hashNode(node as Text), offset];
-  } else {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const textNode = findTextNode(node, first)!;
-    return [hashNode(textNode), first ? 0 : textNode.length];
-  }
-}
-
-function rangeToFragmentPart(range: Range): string | null {
-  const [startHash, startOffset] = normalizeSelectionPart(range.startContainer, range.startOffset, true);
-  const [endHash, endOffset] = normalizeSelectionPart(range.endContainer, range.endOffset, false);
-  if (startHash === endHash) {
-    return `${startHash}:${startOffset}:${endOffset}`;
-  } else {
-    return `${startHash}:${startOffset}.${endHash}:${endOffset}`;
-  }
-}
-
 export function selectionToFragment(selection: Selection): string | null {
-  const fragmentParts = [];
+  type HashNodeOffset = [string, Text, number];
+  type DupeData = [boolean[], number, number];
+  const ranges: [HashNodeOffset, HashNodeOffset, DupeData][] = [];
   for (let i = 0; i < selection.rangeCount; i++) {
     const range = selection.getRangeAt(i);
     if (!range.collapsed) {
-      fragmentParts.push(rangeToFragmentPart(range));
+      const [startNode, endNode] = [range.startContainer, range.endContainer];
+      if (startNode.nodeType == TEXT_NODE && endNode.nodeType == TEXT_NODE) {
+        ranges.push([
+          [hashNode(startNode as Text), startNode as Text, range.startOffset],
+          [hashNode(endNode as Text), endNode as Text, range.endOffset],
+          [[], 0, 0],
+        ]);
+      }
     }
   }
 
-  return fragmentParts.length === 0 ? null : `#1${fragmentParts.join()}`;
+  if (ranges.length == 0) {
+    return null;
+  }
+
+  const walk = document.createTreeWalker(document.body, NODEFILTER_SHOW_TEXT, null);
+  let node;
+  while (node = walk.nextNode() as Text) { // eslint-disable-line no-cond-assign
+    const hash = hashNode(node);
+    for (const [[startHash, startNode], [endHash, endNode], dupes] of ranges) {
+      if (startNode == node) {
+        dupes[1] = dupes[0].length;
+      }
+      if (endNode == node) {
+        dupes[2] = dupes[0].length;
+      }
+      if (startHash == hash) {
+        dupes[0].push(true);
+      } else if (endHash == hash) {
+        dupes[0].push(false);
+      }
+    }
+  }
+
+  const fragmentParts = ranges.map(([[startHash, , startOffset], [endHash, , endOffset], [dupes, startDupeOffset, endDupeOffset]]) => {
+    let fragmentPart;
+    if (startHash == endHash) {
+      fragmentPart= `${startHash}:${startOffset}:${endOffset}`;
+    } else {
+      fragmentPart= `${startHash}:${startOffset}.${endHash}:${endOffset}`;
+    }
+    if (new Set(dupes).size != dupes.length) {
+      const dupesString = dupes.map(x => x ? 's' : 'e').join('');
+      fragmentPart += `~${dupesString}~${startDupeOffset}~${endDupeOffset}`;
+    }
+    return fragmentPart;
+  });
+
+  return `#1${fragmentParts.join()}`;
 }
 
 function getRangeFromFragmentPart(fragmentPart: string): Range {
