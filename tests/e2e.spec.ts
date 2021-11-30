@@ -1,5 +1,5 @@
+import { expect, test } from '@playwright/test';
 import { port } from './config';
-import { test, expect } from '@playwright/test';
 
 const url = `http://localhost:${port}/tests/html/e2e.html`;
 

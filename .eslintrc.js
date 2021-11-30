@@ -41,5 +41,6 @@ module.exports = {
     'comma-dangle': ['error', 'always-multiline'],
     'no-trailing-spaces': 'error',
     'comma-spacing': ['error', { 'before': false, 'after': true }],
+    'sort-imports': 'error',
   }
 };

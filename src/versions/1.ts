@@ -1,5 +1,5 @@
-import { fromNumber } from '../util/base64';
 import { cyrb53 } from '../util/cyrb53';
+import { fromNumber } from '../util/base64';
 
 // Version 1 Fragment Format (UNSTABLE)
 //
