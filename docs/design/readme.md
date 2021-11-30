@@ -10,4 +10,6 @@ If the user selected starting at the word `text` and ending at the word `italics
 
 This has some obvious drawbacks — if you have very large paragraphs, changing any text within them will break all links to that paragraph. I have some ideas for reasonable solutions to this, but haven't started implementing them yet.
 
+Handling of nodes with the same text contents (and thus the same hash) is described [here](/docs/design/ambiguous_nodes.md).
+
 The exact details of the hashing and format are unimportant, but are commented in the code for the curious.
