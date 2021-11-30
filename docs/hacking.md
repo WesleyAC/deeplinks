@@ -1,6 +1,6 @@
 # How to hack on `deeplinks.js`
 
-First, install the dependencies. If you're using [NixOS](https://nixos.org/), there's a [`shell.nix`](../shell.nix) file provided. Otherwise, I *think* just [installing `yarn`](https://yarnpkg.com/getting-started/install) should do. You'll need to have Firefox, Chrome, and Python 3 installed to run the end-to-end tests, as well.
+First, install the dependencies. If you're using [NixOS](https://nixos.org/), there's a [`shell.nix`](../shell.nix) file provided. Otherwise, I *think* just [installing `yarn`](https://yarnpkg.com/getting-started/install) should do. You'll need to have Firefox, Chrome, and Python 3 installed to run the end-to-end tests, as well. If you're using NixOS, [nixos-playwright](https://github.com/ludios/nixos-playwright) is useful for getting the end-to-end tests to work.
 
 Once you've done that, you can `yarn build` to generate the code in `dist/`, `yarn lint` to run the linter, and `yarn test` to run the end-to-end tests (which will automatically run the lint and build steps first).
 
