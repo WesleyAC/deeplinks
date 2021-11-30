@@ -5,7 +5,7 @@
 // https://stackoverflow.com/questions/7616461/generate-a-hash-from-string-in-javascript/52171480#52171480
 
 export const cyrb53 = function(str: string): number {
-  let h1 = 0xdeadbeef , h2 = 0x41c6ce57;
+  let h1 = 0xdeadbeef, h2 = 0x41c6ce57;
   for (let i = 0, ch; i < str.length; i++) {
     ch = str.charCodeAt(i);
     h1 = Math.imul(h1 ^ ch, 2654435761);

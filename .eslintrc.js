@@ -40,5 +40,6 @@ module.exports = {
     'no-useless-return': 'error',
     'comma-dangle': ['error', 'always-multiline'],
     'no-trailing-spaces': 'error',
+    'comma-spacing': ['error', { 'before': false, 'after': true }],
   }
 };
