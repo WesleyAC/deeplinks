@@ -10,6 +10,12 @@ async function testFragment(page: Page, fragment: string, testFn: (Page) => void
   await testFn(page);
 }
 
+// Keeping everything in the same test() function makes it harder to tell which
+// test failed, but it also makes it nearly twice as fast to run the tests (in
+// the case with testing 19 fragments on two browsers, but the difference in
+// speed will grow with the number of fragments tested), so it seems worth it —
+// it seems like there's significant setup cost to each test() function.
+
 test('misc', async ({ page }) => {
   const tests = {
     '#1JmqE9nH3Z:121:158': ['valueless until you get the screw out', 'short format, no dot'],
