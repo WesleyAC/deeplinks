@@ -55,7 +55,7 @@ function hashNode(n: Text): string {
   return fromNumber(cyrb53(n.wholeText));
 }
 
-export function selectionToFragment(selection: Selection): string | null {
+export function selectionToFragment(selection: Selection): string {
   type HashNodeOffset = [string, Text, number];
   type DupeData = [boolean[], number, number];
   const ranges: [HashNodeOffset, HashNodeOffset, DupeData][] = [];
@@ -74,7 +74,7 @@ export function selectionToFragment(selection: Selection): string | null {
   }
 
   if (ranges.length == 0) {
-    return null;
+    return '';
   }
 
   const walk = document.createTreeWalker(document.body, NODEFILTER_SHOW_TEXT, null);

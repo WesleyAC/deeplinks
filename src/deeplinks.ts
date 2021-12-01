@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setTimeout(() => {
     document.addEventListener('selectionchange', () => {
       const fragment = v1.selectionToFragment(document.getSelection() as Selection);
-      history.replaceState(null, '', fragment ?? location.pathname);
+      history.replaceState(null, '', location.pathname + fragment);
     });
   }, 0);
 });
