@@ -7,7 +7,7 @@ function selectRanges(ranges: Range[]) {
     selection.addRange(range);
   }
   ranges[0].startContainer.parentElement?.scrollIntoView();
-  if (selection.rangeCount !== ranges.length) {
+  if (selection.rangeCount != ranges.length) {
     alert('You opened a link that highlighted multiple selections of text, but your browser does not support this — only the first selection is being shown.');
   }
 }
@@ -15,8 +15,8 @@ function selectRanges(ranges: Range[]) {
 document.addEventListener('DOMContentLoaded', () => {
   const fragment = location.hash.slice(1);
 
-  if (fragment && document.getElementById(fragment) === null) {
-    if (fragment[0] === '1') {
+  if (fragment && !document.getElementById(fragment)) {
+    if (fragment[0] == '1') {
       selectRanges(v1.fragmentToRangeList(fragment));
     }
   }
