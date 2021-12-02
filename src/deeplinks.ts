@@ -32,6 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setTimeout(() => {
     document.addEventListener('selectionchange', () => {
       const fragment = v1.selectionToFragment(document.getSelection() as Selection);
+      // replaceState is used instead of setting location.hash to avoid scrolling.
       history.replaceState(null, '', location.pathname + fragment);
     });
   }, 0);
