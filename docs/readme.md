@@ -1,5 +1,9 @@
 # `deeplinks.js`
 
+[![tests badge](https://img.shields.io/github/workflow/status/WesleyAC/deeplinks/tests?label=tests&logo=github)](https://github.com/WesleyAC/deeplinks/actions/workflows/tests.yml)
+[![browser support: 94%](https://img.shields.io/badge/browser%20support-94%25-informational)](/docs/browser_support.md) <!-- as of: dec 2021 -->
+[![license: MIT](https://img.shields.io/badge/license-MIT-informational)](/license)
+
 `deeplinks.js` is a script that allows people to easily link directly to any text selection on your website. [Here's](https://notebook.wesleyac.com/what-hypertext-could-be/#1.GHfGDDIwx:21.GHfGDDIwx:62) an example of what one of these links looks like. It's intended mostly for blogs and other such websites, although it is relatively agnostic to the environment it's running in.
 
 Users can select text on the site as the normally would, and when they do, the [fragment identifier](https://en.wikipedia.org/wiki/URI_fragment) (the thing that comes after the `#` in the URL) changes. If they want to share the text they have selected, they simply copy the URL, including the fragment identifier. When someone else visits that URL, the same bit of text will be selected and scrolled into view.
