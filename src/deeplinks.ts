@@ -8,7 +8,7 @@ function selectRanges(ranges: Range[]) {
   }
   ranges[0].startContainer.parentElement?.scrollIntoView();
   if (selection.rangeCount != ranges.length) {
-    alert('You opened a link that highlighted multiple selections of text, but your browser does not support this — only the first selection is being shown.');
+    void import('./e').then(error => error.m(ranges));
   }
 }
 
