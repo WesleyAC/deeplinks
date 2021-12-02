@@ -4,7 +4,7 @@
   "scripts": {
     "clean": "rm -rf dist/",
     "build": "rollup -c",
-    "lint": "eslint {src,tests}/**/*.ts rollup.config.js",
+    "lint": "eslint {src,tests}/**/*.{ts,mjs} rollup.config.js",
     "test": "yarn lint && yarn build && yarn playwright test",
     "proptest": "yarn lint && yarn build && python -m http.server 25381 & yarn node tests/proptest.mjs"
   },

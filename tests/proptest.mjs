@@ -1,6 +1,6 @@
 import { chromium } from 'playwright';
 
-const url = `http://localhost:25381/tests/html/e2e.html`;
+const url = 'http://localhost:25381/tests/html/e2e.html';
 
 function randomlySelect() {
   // https://stackoverflow.com/questions/1527803/generating-random-whole-numbers-in-javascript-in-a-specific-range/29246176#29246176
@@ -34,7 +34,7 @@ function getSelection() {
   const browser = await chromium.launch();
   const page = await browser.newPage();
   let testsRun = 0;
-  while (true) {
+  for (;;) {
     await page.goto(url);
 
     await page.evaluate(randomlySelect);
@@ -48,11 +48,11 @@ function getSelection() {
 
     if (origSelection !== newSelection) {
       console.log(`FAILED!\n${location}\n--- EXPECTED: ---\n${origSelection}\n--- RECEIVED: ---\n${newSelection}`);
-      process.exit()
+      process.exit(); // eslint-disable-line no-undef
     }
 
     testsRun++;
-    process.stdout.write(`tests run: ${testsRun}\r`);
+    process.stdout.write(`tests run: ${testsRun}\r`); // eslint-disable-line no-undef
   }
 })();
 
