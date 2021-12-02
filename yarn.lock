@@ -3002,6 +3002,43 @@ __metadata:
   languageName: node
   linkType: hard
 
+"playwright-core@npm:=1.17.0":
+  version: 1.17.0
+  resolution: "playwright-core@npm:1.17.0"
+  dependencies:
+    commander: ^8.2.0
+    debug: ^4.1.1
+    extract-zip: ^2.0.1
+    https-proxy-agent: ^5.0.0
+    jpeg-js: ^0.4.2
+    mime: ^2.4.6
+    pngjs: ^5.0.0
+    progress: ^2.0.3
+    proper-lockfile: ^4.1.1
+    proxy-from-env: ^1.1.0
+    rimraf: ^3.0.2
+    socks-proxy-agent: ^6.1.0
+    stack-utils: ^2.0.3
+    ws: ^7.4.6
+    yauzl: ^2.10.0
+    yazl: ^2.5.1
+  bin:
+    playwright: cli.js
+  checksum: 8489b41ea7081487cb18c5a50a4ec0709e0828bba28276a898ef12222ae664b5f3c19d06bf015e265d345e8c65628647cb4b2761cb3c31b489295a64d955aa9f
+  languageName: node
+  linkType: hard
+
+"playwright@npm:^1.17.0":
+  version: 1.17.0
+  resolution: "playwright@npm:1.17.0"
+  dependencies:
+    playwright-core: =1.17.0
+  bin:
+    playwright: cli.js
+  checksum: b49e744171befb1d4be4a03833dd257e538a4aa18d83669f126a2a45cb5ab10f226830c05743a4acc549fb7cb96734e904981c4e85b5ca5903c7ab2c31172178
+  languageName: node
+  linkType: hard
+
 "pngjs@npm:^4.0.1":
   version: 4.0.1
   resolution: "pngjs@npm:4.0.1"
@@ -3225,6 +3262,7 @@ __metadata:
     "@typescript-eslint/parser": ^5.4.0
     eslint: ^8.3.0
     eslint-plugin-playwright: ^0.6.0
+    playwright: ^1.17.0
     rollup: ^2.60.1
     rollup-plugin-terser: ^7.0.2
     ts-loader: ^9.2.6

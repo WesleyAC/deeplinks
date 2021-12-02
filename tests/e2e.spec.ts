@@ -1,7 +1,6 @@
 import { expect, test } from '@playwright/test';
-import { port } from './config';
 
-const url = `http://localhost:${port}/tests/html/e2e.html`;
+const url = 'http://localhost:25381/tests/html/e2e.html';
 
 async function testFragment(page: Page, fragment: string, testFn: (Page) => void) {
   await page.goto('about:blank');
