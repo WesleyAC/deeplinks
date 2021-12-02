@@ -5,11 +5,11 @@
     "clean": "rm -rf dist/",
     "build": "rollup -c",
     "lint": "eslint {src,tests}/**/*.ts rollup.config.js",
-    "test": "yarn lint && yarn build && playwright test",
-    "proptest": "yarn lint && yarn build && python -m http.server 25381 & node tests/proptest.mjs"
+    "test": "yarn lint && yarn build && yarn playwright test",
+    "proptest": "yarn lint && yarn build && python -m http.server 25381 & yarn node tests/proptest.mjs"
   },
   "devDependencies": {
-    "@playwright/test": "^1.16.3",
+    "@playwright/test": "^1.17.0",
     "@rollup/plugin-typescript": "^8.3.0",
     "@typescript-eslint/eslint-plugin": "^5.4.0",
     "@typescript-eslint/parser": "^5.4.0",
@@ -21,6 +21,7 @@
     "ts-loader": "^9.2.6",
     "tslib": "^2.3.1",
     "typescript": "^4.5.2",
-    "webpack": "^5.64.4"
+    "webpack": "^5.64.4",
+    "yazl": "^2.5.1"
   }
 }
