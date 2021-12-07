@@ -17,17 +17,17 @@ async function testFragment(page: Page, fragment: string, testFn: (Page) => void
 
 test('misc', async ({ page }) => {
   const tests = {
-    '#2JmqE9nH3Z:121:158': ['valueless until you get the screw out', 'short format'],
-    '#2JmqE9nH3Z:121.JmqE9nH3Z:158': ['valueless until you get the screw out', 'long format (but single node)'],
-    '#2J9W3o85TQ:12.3EdKovNLr:11': ['統一碼 💚💙💜🧡💛💚💙💜🧡💛💚💙💜🧡\n\n🐢🐢', 'selecting multiple different nodes, also unicode'],
+    '#2JmqE9nH3Z:1v:2U': ['valueless until you get the screw out', 'short format'],
+    '#2JmqE9nH3Z:1v.JmqE9nH3Z:2U': ['valueless until you get the screw out', 'long format (but single node)'],
+    '#2J9W3o85TQ:C.3EdKovNLr:B': ['統一碼 💚💙💜🧡💛💚💙💜🧡💛💚💙💜🧡\n\n🐢🐢', 'selecting multiple different nodes, also unicode'],
     '#26SHlbtTkC:4.CBcmrfV8L:4': ['links.js e2e', 'selecting parent/child nodes'],
-    '#2EdoNr3xj_:0.BLkIVltu0:14': ['uh oh\nidentical text', 'multiple identical nodes, but no disambiguation - start node is unique'],
+    '#2EdoNr3xj_:0.BLkIVltu0:E': ['uh oh\nidentical text', 'multiple identical nodes, but no disambiguation - start node is unique'],
     '#27whfBu1TH:0.TxIWFV5Nq:4': ['identical text nodes?\nhmmm', 'multiple identical nodes, but no disambiguation - end node is unique'],
-    '#2EdoNr3xj_:0.7whfBu1TH:21~seeeee~0~2': ['uh oh\nidentical text nodes\nidentical text nodes?\nidentical text nodes\nidentical text nodes?', 'multiple identical nodes, with disambiguation - start node is unique'],
+    '#2EdoNr3xj_:0.7whfBu1TH:L~seeeee~0~2': ['uh oh\nidentical text nodes\nidentical text nodes?\nidentical text nodes\nidentical text nodes?', 'multiple identical nodes, with disambiguation - start node is unique'],
     '#2BLkIVltu0:0.TxIWFV5Nq:4~ssssse~3~5': ['identical text nodes\nidentical text nodes?\nidentical text nodes\nidentical text nodes?\nhmmm', 'multiple identical nodes, with disambiguation - end node is unique'],
-    '#2BLkIVltu0:0.7whfBu1TH:21~sesesesese~2~7': ['identical text nodes\nidentical text nodes?\nidentical text nodes\nidentical text nodes?\nidentical text nodes\nidentical text nodes?', 'multiple identical nodes, with disambiguation, both start and end nodes are ambiguous'],
-    '#2BLkIVltu0:0:20~sssss~0~1': ['identical text nodes\nidentical text nodes?\nidentical text nodes', 'short fragment with ambiguous nodes, start and end node are different'],
-    '#2BLkIVltu0:0:20~sssss~1': ['identical text nodes', 'short fragment with ambiguous nodes, start and end node are the same'],
+    '#2BLkIVltu0:0.7whfBu1TH:L~sesesesese~2~7': ['identical text nodes\nidentical text nodes?\nidentical text nodes\nidentical text nodes?\nidentical text nodes\nidentical text nodes?', 'multiple identical nodes, with disambiguation, both start and end nodes are ambiguous'],
+    '#2BLkIVltu0:0:K~sssss~0~1': ['identical text nodes\nidentical text nodes?\nidentical text nodes', 'short fragment with ambiguous nodes, start and end node are different'],
+    '#2BLkIVltu0:0:K~sssss~1': ['identical text nodes', 'short fragment with ambiguous nodes, start and end node are the same'],
     '#2W00000001:0.W00000001:5': ['', 'nonexistent node'],
     '#2W00000001:0.W00000002:5': ['', 'nonexistent nodes'],
     '#2W00000001:0:5': ['', 'nonexistent node (short version)'],
@@ -68,7 +68,7 @@ test('misc', async ({ page }) => {
 test('multiselect', async ({ page }, testInfo) => {
   const multiselectKnownGoodBrowsers = ['firefox'];
   const tests = {
-    '#293nojgL33:21.3fpc_LoVz:0,3fpc_LoVz:5.VVGZj9Vjq:0': ['bold', 'italic'],
+    '#293nojgL33:L.3fpc_LoVz:0,3fpc_LoVz:5.VVGZj9Vjq:0': ['bold', 'italic'],
     '#193nojgL33:21.3fpc_LoVz:0,3fpc_LoVz:5.VVGZj9Vjq:0': ['bold', 'italic'],
     '#1.J9W3o85TQ:7:15,J9W3o85TQ:16:18,J9W3o85TQ:26.J9W3o85TQ:28,J9W3o85TQ:36:38,3EdKovNLr:0:18,VIMmaQoVW:229.JmqE9nH3Z:10': ['我是少量的統一碼', '💚', '💚', '💚', ' 🐢🐢🐢\n\n', 'unimportant.\n\nRight'],
   };

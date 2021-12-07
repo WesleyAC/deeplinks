@@ -1,5 +1,5 @@
+import { fromNumber, toNumber } from '../util/base64';
 import { cyrb53 } from '../util/cyrb53';
-import { fromNumber } from '../util/base64';
 
 // See docs/spec/v2.md for what this code implements.
 
@@ -98,7 +98,7 @@ function normalizeRange(range: Range) {
 }
 
 export function selectionToFragment(selection: Selection): string {
-  type HashNodeOffset = [string, Text, number];
+  type HashNodeOffset = [string, Text, string];
   type DupeData = [boolean[], number, number];
   const ranges: [HashNodeOffset, HashNodeOffset, DupeData][] = [];
   for (let i = 0; i < selection.rangeCount; i++) {
@@ -107,8 +107,8 @@ export function selectionToFragment(selection: Selection): string {
       const [startNode, endNode] = [range.startContainer, range.endContainer];
       if (startNode.nodeType == TEXT_NODE && endNode.nodeType == TEXT_NODE) {
         ranges.push([
-          [hashNode(startNode as Text), startNode as Text, range.startOffset],
-          [hashNode(endNode as Text), endNode as Text, range.endOffset],
+          [hashNode(startNode as Text), startNode as Text, fromNumber(range.startOffset)],
+          [hashNode(endNode as Text), endNode as Text, fromNumber(range.endOffset)],
           [[], 0, 0],
         ]);
       }
@@ -165,7 +165,7 @@ function getRangeFromFragmentPart(fragmentPart: string): Range {
   } else {
     [[startHash, startOffset], [endHash, endOffset]] = split;
   }
-  [startOffset, endOffset] = [startOffset, endOffset].map(parseFloat);
+  [startOffset, endOffset] = [startOffset, endOffset].map(toNumber);
 
   // the boolean represents whether it's a start node (true) or end node (false)
   const nodes: [Text, boolean][] = [];
