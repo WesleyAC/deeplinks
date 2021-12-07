@@ -30,13 +30,12 @@ First, consider whether you really want to do this. If you do, you are making ne
 
 Once you're sure:
 
-```
-$ yarn build
-$ cp -r dist/ ~/your-webiste/deeplinks/
-```
-
-Then, add this snippet to pages you want to enable deep-linking on:
-
-```html
-<script type="module" src="/deeplinks/deeplinks.js"></script>
-```
+* Download the most recent release from the [releases page](https://github.com/WesleyAC/deeplinks/releases).
+* Extract the zip file somewhere in your website.
+* Include the script anywhere in your html:
+  ```html
+  <script type="module" src="/deeplinks/deeplinks.js"></script>
+  ```
+  This assumes you extracted the release into a directory called `deeplinks` — you'll need to change the `src` if you put it somewhere else. Make sure you include the `type="module"`, it won't work otherwise! You should only include it on pages that won't change frequently — particularly, don't include it on pagination pages where the content changes as you publish new posts, for instance.
+* Test that it works.
+* If you're feeling nice, fill out [this form](https://docs.google.com/forms/d/e/1FAIpQLSdoQuU3GBhGD2z8lFhN8KtVqcBvKBX1XZ3BgOQv7h91PCgziA/viewform) with a link to your website! (Or just [email me](mailto:me@wesleyac.com), if you don't like Google Forms)
