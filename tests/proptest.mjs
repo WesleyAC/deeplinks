@@ -1,4 +1,4 @@
-import { chromium } from 'playwright';
+import { chromium, firefox } from 'playwright';
 
 const url = 'http://localhost:25381/tests/html/e2e.html';
 
@@ -34,7 +34,9 @@ function getSelection() {
 }
 
 (async () => {
-  const browser = await chromium.launch();
+  const browserType = Math.random() > 0.5 ? 'chromium' : 'firefox';
+  const browser = browserType === 'chromium' ? await chromium.launch() : await firefox.launch();
+  console.log(`Using browser: ${browserType}`);
   const page = await browser.newPage();
   let testsRun = 0;
   for (;;) {
