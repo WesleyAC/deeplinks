@@ -6,7 +6,7 @@
     "build": "rollup -c",
     "lint": "eslint {src,tests}/**/*.{ts,mjs} rollup.config.js",
     "test": "yarn lint && yarn build && yarn playwright test",
-    "proptest": "yarn lint && yarn build && python -m http.server 25381 & yarn node tests/proptest.mjs"
+    "proptest": "yarn lint && yarn build && sh -c 'python -m http.server 25381 >/dev/null 2>&1' & yarn node tests/proptest.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.17.0",
