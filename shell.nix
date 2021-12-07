@@ -9,6 +9,9 @@ stdenv.mkDerivation {
     pkgs.python3
     pkgs.firefox-bin
     pkgs.google-chrome-dev
+    pkgs.gzip
+    pkgs.brotli
+    pkgs.zip
   ];
 }
 

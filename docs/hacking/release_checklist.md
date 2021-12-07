@@ -1,0 +1,24 @@
+# Release Checklist
+
+- [ ] Ensure that you do not have any local changes.
+- [ ] Bump version number in [`package.json`](/package.json). Bump the minor number when releasing a new version of the hash format, and the patch number for other changes.
+  - [ ] If bumping the minor number, change the "Status" for that version to "Stable" in [`docs/spec/`](/docs/spec/).
+- [ ] Run `yarn clean`.
+- [ ] Ensure `yarn test` passes.
+- [ ] Ensure `yarn proptest` doesn't find any errors (run at least 5000 tests on both Firefox and Chrome).
+- [ ] Run `yarn build` (the test steps should have done this, but just for good measure).
+- [ ] Update filesize numbers in [`readme.md`](/docs/readme.md), rounding to nearest tenth of a kb.
+  - [ ] `gzip < dist/deeplinks.js | wc -c` for the gzip number.
+  - [ ] `brotli -c dist/deeplinks.js | wc -c` for the brotli number.
+- [ ] Update browser support numbers. Check [caniuse.com](https://caniuse.com/) for the features used, and update the badge in [`readme.md`](/docs/readme.md) and all of the numbers in [`docs/browser_support.md`](/docs/browser_support.md).
+- [ ] Update [`docs/changelog.md`](/docs/changelog.md) with a summary of updates since last release.
+- [ ] Commit changes with the commit message `[release] vX.X.X`, where `X.X.X` is the version number.
+- [ ] Tag release via `git tag vX.X.X`.
+- [ ] Push the commit and tag to Github.
+- [ ] Make the release zip file with `VERSION=vX.X.X sh -c 'rm /tmp/$VERSION.zip; cd dist && zip /tmp/$VERSION.zip *'`
+- [ ] Make the release at [https://github.com/WesleyAC/deeplinks/releases/new](https://github.com/WesleyAC/deeplinks/releases/new)
+  - [ ] Select the correct tag.
+  - [ ] Set the title to be "vX.X.X"
+  - [ ] Copy the relevant section of the changelog into the description.
+  - [ ] Attach the release zip file from the previous step.
+  - [ ] Click "Publish release".
