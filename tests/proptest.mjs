@@ -10,7 +10,7 @@ function randomlySelect() {
   }
 
   const nodes = [];
-  const walk = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+  const walk = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT ^ NodeFilter.SHOW_ELEMENT);
   let node;
   while (node = walk.nextNode()) { // eslint-disable-line no-cond-assign
     nodes.push(node);
@@ -18,11 +18,21 @@ function randomlySelect() {
 
   let [startIndex, endIndex] = [randInt(nodes.length), randInt(nodes.length)].sort();
   let [startNode, endNode] = [nodes[startIndex], nodes[endIndex]];
-  let [startOffset, endOffset] = [randInt(startNode.wholeText.length), randInt(endNode.wholeText.length)];
+  let startOffset, endOffset;
+  if (startNode.nodeType == Node.TEXT_NODE) {
+    startOffset = randInt(startNode.wholeText.length);
+  } else {
+    startOffset = randInt(startNode.childNodes.length + 1);
+  }
+  if (endNode.nodeType == Node.TEXT_NODE) {
+    endOffset = randInt(endNode.wholeText.length);
+  } else {
+    endOffset = randInt(endNode.childNodes.length + 1);
+  }
 
   document.getSelection().setBaseAndExtent(startNode, startOffset, endNode, endOffset);
 
-  return `let nodes=[],walk=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT),node;while(node=walk.nextNode()){nodes.push(node)};document.getSelection().setBaseAndExtent(nodes[${startIndex}],${startOffset},nodes[${endIndex}],${endOffset});`;
+  return `let nodes=[],walk=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT^NodeFilter.SHOW_ELEMENT),node;while(node=walk.nextNode()){nodes.push(node)};document.getSelection().setBaseAndExtent(nodes[${startIndex}],${startOffset},nodes[${endIndex}],${endOffset});`;
 }
 
 function getLocation() {
@@ -51,8 +61,20 @@ function getSelection() {
 
     let newSelection = await page.evaluate(getSelection);
 
-    if (origSelection !== newSelection) {
-      console.log(`FAILED!\n${location}\n--- EXPECTED: ---\n${origSelection}\n--- RECEIVED: ---\n${newSelection}\n--- REPLICATION: ---\n${replication}`);
+    let origSelectionTest, newSelectionTest;
+    if (browserType === 'firefox') {
+      // Firefox includes whitespace for element node selections, but not for
+      // text node selections. Since we convert all selections to text node
+      // selections, we need to trim this.
+      origSelectionTest = origSelection.split('\n').map(line => line.trim()).filter(line => line.length > 0).join('\n').trim();
+      newSelectionTest = newSelection.split('\n').map(line => line.trim()).filter(line => line.length > 0).join('\n').trim();
+    } else {
+      origSelectionTest = origSelection.trim();
+      newSelectionTest = newSelection.trim();
+    }
+
+    if (origSelectionTest !== newSelectionTest) {
+      console.log(`\nFAILED!\n${location}\n--- EXPECTED: ---\n${origSelectionTest}\n--- RECEIVED: ---\n${newSelectionTest}\n--- REPLICATION: ---\n${replication}`);
       process.exit(); // eslint-disable-line no-undef
     }
 

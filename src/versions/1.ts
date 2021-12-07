@@ -15,13 +15,96 @@ function hashNode(n: Text): string {
   return fromNumber(cyrb53(n.wholeText));
 }
 
+// Take a range, and return a new range containing the same text, but ensuring
+// that the start and end are both non-whitespace-only text nodes.
+function normalizeRange(range: Range) {
+  // We start off by picking start and end nodes. If the start node is a text
+  // node, we can just use it as is. If it's a element node, though, we need to
+  // use the offset to figure out which child node is the one that's actually
+  // selected.
+  //
+  // There's a additional hiccup that the offsets used by Range represent the
+  // spaces in between child nodes, while the TreeWalker API operates on the
+  // nodes directly. Because of this, we need to keep track of whether the
+  // selected text starts/ends before or after the start/end node. The
+  // startOffset/endOffset variables do double duty in this regard — if the
+  // startNode/endNode is a text node, the startOffset/endOffset is a text
+  // offset, but if the startNode/endNode is a element node, they represent
+  // whether the selection starts/ends before the node (0) or after the node
+  // (1).
+
+  const makeNodeAndOffset = (initNode: Node, initOffset: number): [Node, number] => {
+    let node, offset;
+    if (initNode.nodeType == TEXT_NODE || initNode.childNodes.length == 0) {
+      node = initNode;
+      offset = initOffset;
+    } else {
+      node = initNode.childNodes[Math.min(initOffset, initNode.childNodes.length - 1)];
+      if (node.nodeType == TEXT_NODE) {
+        offset = (initOffset == initNode.childNodes.length) ? (node as Text).wholeText.length : 0;
+      } else {
+        offset = (initOffset == initNode.childNodes.length) ? 1 : 0;
+      }
+    }
+    return [node, offset];
+  };
+
+  const [startNode, startOffset] = makeNodeAndOffset(range.startContainer, range.startOffset);
+  const [endNode, endOffset] = makeNodeAndOffset(range.endContainer, range.endOffset);
+
+  const newRange = new Range();
+  const treeWalker = document.createTreeWalker(range.commonAncestorContainer);
+  // stages:
+  // 0 = Looking for startNode.
+  // 1 = startNode found, but it wasn't a non-empty text node — looking for a
+  //     non-empty text node.
+  // 2 = Looking for endNode.
+  let stage = 0;
+  let node: Node | null = treeWalker.currentNode;
+  let prevEndNode = endNode;
+  while (node) {
+    if (stage == 0 && node == startNode) {
+      if (node.nodeType != TEXT_NODE && startOffset != 0) {
+        node = treeWalker.nextNode();
+        if (!node) {
+          return null;
+        }
+      }
+      stage = 1;
+    }
+    if (node.nodeType == TEXT_NODE && (node as Text).wholeText.trim() != '') {
+      if (stage == 1) {
+        newRange.setStart(node, (node == startNode) ? startOffset : 0);
+        stage = 2;
+      }
+      if (stage == 2) {
+        prevEndNode = newRange.endContainer;
+        newRange.setEnd(node, (node as Text).wholeText.length);
+      }
+    }
+    if (stage == 2 && node == endNode) {
+      if (node.nodeType == TEXT_NODE && (node as Text).wholeText.trim() != '') {
+        newRange.setEnd(node, endOffset);
+        return newRange;
+      }
+      if (node == newRange.endContainer && endOffset == 0) {
+        newRange.setEnd(prevEndNode, (prevEndNode as Text).wholeText.length);
+      }
+      return newRange;
+    }
+    node = treeWalker.nextNode();
+  }
+
+  return null;
+}
+
 export function selectionToFragment(selection: Selection): string {
   type HashNodeOffset = [string, Text, number];
   type DupeData = [boolean[], number, number];
   const ranges: [HashNodeOffset, HashNodeOffset, DupeData][] = [];
   for (let i = 0; i < selection.rangeCount; i++) {
-    const range = selection.getRangeAt(i);
-    if (!range.collapsed) {
+    const range = normalizeRange(selection.getRangeAt(i));
+    if (range && !range.collapsed) {
       const [startNode, endNode] = [range.startContainer, range.endContainer];
       if (startNode.nodeType == TEXT_NODE && endNode.nodeType == TEXT_NODE) {
         ranges.push([
