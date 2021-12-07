@@ -4,7 +4,7 @@ There are two main approaches to testing `deeplinks.js`: hardcoded end-to-end te
 
 # Hardcoded end-to-end tests
 
-These mostly take some hardcoded URL fragment and verify that the text that's selected is what's expected. They can be run with `yarn test`.
+These mostly take some hardcoded URL fragment and verify that the text that's selected is what's expected. They can be run with `yarn test`. These tests currently don't test the `selectionToFragment` code — if you're modifying that, you should use the generative tests desribed below, which do exercise that code.
 
 # Generative tests
 
