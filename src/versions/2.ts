@@ -147,7 +147,7 @@ export function selectionToFragment(selection: Selection): string {
     }
     if (new Set(dupes).size != dupes.length) {
       const dupesString = dupes.map(x => x ? 's' : 'e').join('');
-      fragmentPart += `~${dupesString}~${startDupeOffset}~${endDupeOffset}`;
+      fragmentPart += `~${dupesString}~${fromNumber(startDupeOffset)}~${fromNumber(endDupeOffset)}`;
     }
     return fragmentPart;
   });
@@ -185,8 +185,8 @@ function getRangeFromFragmentPart(fragmentPart: string): Range {
   let startNode, endNode;
 
   if (dupeString && nodes.map(n => n[1] ? 's' : 'e').join('') == dupeString) {
-    startNode = nodes[parseInt(dupeStartOffset)];
-    endNode = nodes[parseInt(dupeEndOffset)];
+    startNode = nodes[toNumber(dupeStartOffset)];
+    endNode = nodes[toNumber(dupeEndOffset)];
   }
 
   if (!startNode || !endNode) {

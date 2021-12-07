@@ -16,6 +16,9 @@ async function testFragment(page: Page, url: string, testFn: (Page) => void) {
 // it seems like there's significant setup cost to each test() function.
 
 test('misc', async ({ page }) => {
+  const url2Tests = {
+    '#2BLkIVltu0:0:K~ssssssssssssssss~0~A': ['identical text nodes\nidentical text nodes?\nidentical text nodes\nidentical text nodes?\nidentical text nodes\nidentical text nodes?\nidentical text nodes\nidentical text nodes?\nidentical text nodes\nidentical text nodes\nidentical text nodes\nidentical text nodes\nidentical text nodes\nidentical text nodes\nidentical text nodes', 'many duplicate nodes'],
+  };
   const url1Tests = {
     '#2JmqE9nH3Z:1v:2U': ['valueless until you get the screw out', 'short format'],
     '#2JmqE9nH3Z:1v.JmqE9nH3Z:2U': ['valueless until you get the screw out', 'long format (but single node)'],
@@ -27,7 +30,7 @@ test('misc', async ({ page }) => {
     '#2BLkIVltu0:0.TxIWFV5Nq:4~ssssse~3~5': ['identical text nodes\nidentical text nodes?\nidentical text nodes\nidentical text nodes?\nhmmm', 'multiple identical nodes, with disambiguation - end node is unique'],
     '#2BLkIVltu0:0.7whfBu1TH:L~sesesesese~2~7': ['identical text nodes\nidentical text nodes?\nidentical text nodes\nidentical text nodes?\nidentical text nodes\nidentical text nodes?', 'multiple identical nodes, with disambiguation, both start and end nodes are ambiguous'],
     '#2BLkIVltu0:0:K~sssss~0~1': ['identical text nodes\nidentical text nodes?\nidentical text nodes', 'short fragment with ambiguous nodes, start and end node are different'],
-    '#2BLkIVltu0:0:K~sssss~1': ['identical text nodes', 'short fragment with ambiguous nodes, start and end node are the same'],
+    '#2BLkIVltu0:0:K~sssss~1~1': ['identical text nodes', 'short fragment with ambiguous nodes, start and end node are the same'],
     '#2W00000001:0.W00000001:5': ['', 'nonexistent node'],
     '#2W00000001:0.W00000002:5': ['', 'nonexistent nodes'],
     '#2W00000001:0:5': ['', 'nonexistent node (short version)'],
@@ -52,7 +55,10 @@ test('misc', async ({ page }) => {
     '#1.W00000001:0.W00000002:5~sse~1~2': ['', 'nonexistent nodes, with disambiguation'],
   };
 
-  const allTests = [['/tests/html/e2e.html', url1Tests]];
+  const allTests = [
+    ['/tests/html/e2e.html', url1Tests],
+    ['/tests/html/e2e.2.html', url2Tests],
+  ];
 
   page.on('dialog', async () => {
     throw 'Unexpected dialog box';
