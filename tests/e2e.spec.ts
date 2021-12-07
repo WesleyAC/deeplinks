@@ -1,10 +1,10 @@
 import { expect, test } from '@playwright/test';
 
-const url = 'http://localhost:25381/tests/html/e2e.html';
+const baseUrl = 'http://localhost:25381';
 
-async function testFragment(page: Page, fragment: string, testFn: (Page) => void) {
+async function testFragment(page: Page, url: string, testFn: (Page) => void) {
   await page.goto('about:blank');
-  await page.goto(url + fragment);
+  await page.goto(url);
   await page.waitForLoadState('domcontentloaded');
   await testFn(page);
 }
@@ -16,7 +16,7 @@ async function testFragment(page: Page, fragment: string, testFn: (Page) => void
 // it seems like there's significant setup cost to each test() function.
 
 test('misc', async ({ page }) => {
-  const tests = {
+  const url1Tests = {
     '#2JmqE9nH3Z:1v:2U': ['valueless until you get the screw out', 'short format'],
     '#2JmqE9nH3Z:1v.JmqE9nH3Z:2U': ['valueless until you get the screw out', 'long format (but single node)'],
     '#2J9W3o85TQ:C.3EdKovNLr:B': ['統一碼 💚💙💜🧡💛💚💙💜🧡💛💚💙💜🧡\n\n🐢🐢', 'selecting multiple different nodes, also unicode'],
@@ -51,17 +51,22 @@ test('misc', async ({ page }) => {
     '#1W00000001:0:5': ['', 'nonexistent node (short version)'],
     '#1.W00000001:0.W00000002:5~sse~1~2': ['', 'nonexistent nodes, with disambiguation'],
   };
+
+  const allTests = [['/tests/html/e2e.html', url1Tests]];
+
   page.on('dialog', async () => {
     throw 'Unexpected dialog box';
   });
-  for (const fragment of Object.keys(tests)) {
-    const [expected, message] = tests[fragment];
-    console.log(`testing ${message}`);
-    const testFn = async (page) => {
-      const selected = await page.evaluate('document.getSelection().toString()');
-      expect(selected).toBe(expected);
-    };
-    await testFragment(page, fragment, testFn);
+  for (const [path, tests] of allTests) {
+    for (const fragment of Object.keys(tests)) {
+      const [expected, message] = tests[fragment];
+      console.log(`testing ${message}`);
+      const testFn = async (page) => {
+        const selected = await page.evaluate('document.getSelection().toString()');
+        expect(selected).toBe(expected);
+      };
+      await testFragment(page, `${baseUrl}${path}${fragment}`, testFn);
+    }
   }
 });
 
@@ -82,6 +87,7 @@ test('multiselect', async ({ page }, testInfo) => {
   for (const fragment of Object.keys(tests)) {
     const expected = tests[fragment];
     console.log(`testing ${fragment}`);
+    const url = `${baseUrl}/tests/html/e2e.html${fragment}`;
     const testFn = async (page) => {
       const selected = await page.evaluate('document.getSelection().toString()');
       if (multiselectKnownGoodBrowsers.includes(testInfo.project.name)) {
@@ -90,8 +96,8 @@ test('multiselect', async ({ page }, testInfo) => {
         expect([expected.join(''), expected[0]]).toContain(selected);
       }
       // Even if multiselect wasn't supported, don't rewrite URL
-      expect(page.url()).toBe(url + fragment);
+      expect(page.url()).toBe(url);
     };
-    await testFragment(page, fragment, testFn);
+    await testFragment(page, url, testFn);
   }
 });
