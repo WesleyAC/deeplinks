@@ -37,7 +37,7 @@ export function selectionToFragment(selection: Selection): string {
     return '';
   }
 
-  const walk = document.createTreeWalker(document.body, NODEFILTER_SHOW_TEXT, null);
+  const walk = document.createTreeWalker(document.body, NODEFILTER_SHOW_TEXT);
   let node;
   while (node = walk.nextNode() as Text) { // eslint-disable-line no-cond-assign
     const hash = hashNode(node);
