@@ -16,7 +16,7 @@ That description makes it sound a little complicated, but it's actually pretty s
 * Robust. Updates will not break links to older URLs.
 * Short links. Long URLs are ugly and frequently mangled by messaging apps. URLs should be short and not contain characters likely to be mangled by misbehaving apps.
 * Subtle. It shouldn't get in the reader's way. It doesn't break normal fragment-identifier links.
-* Reasonably small. It's around 2kb right now (~1.1kb gziped), and shouldn't grow too much more.
+* Reasonably small. It's around 1.6kb gzipped right now (1.4kb brotli), and shouldn't grow too much more.
 * Fast. This isn't hard, but it's worth making explicit.
 
 ## Non-goals
