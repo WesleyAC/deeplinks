@@ -213,5 +213,5 @@ function getRangeFromFragmentPart(fragmentPart: string): Range {
 }
 
 export function fragmentToRangeList(fragment: string): Range[] {
-  return fragment.replace(/^2\.?/gm, '').split(',').map(getRangeFromFragmentPart);
+  return fragment.substring(1).split(',').map(getRangeFromFragmentPart);
 }
