@@ -35,3 +35,7 @@ I'm using the [`cyrb53` hash function](https://stackoverflow.com/questions/76164
 ## [radix64 encoding](https://stackoverflow.com/questions/6213227/fastest-way-to-convert-a-number-to-radix-64-in-javascript/6573119#6573119)
 
 I chose [this implementation](https://stackoverflow.com/questions/6213227/fastest-way-to-convert-a-number-to-radix-64-in-javascript/6573119#6573119) of radix64 encoding, since it was the most reasonable implementation I could quickly find, in terms of not having glaringly obvious bugs, and being quite small. I've since made several modifications, but the core of it is the same.
+
+## [`connect`](https://github.com/senchalabs/connect) and [`serve-static`](https://github.com/expressjs/serve-static)
+
+These are used to spin up the server used in testing. I picked them because they were recommended by [this stackoverflow answer](https://stackoverflow.com/questions/6084360/using-node-js-as-a-simple-web-server/8427954#8427954) and seem to work fine.

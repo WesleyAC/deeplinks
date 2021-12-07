@@ -5,7 +5,7 @@
   - [ ] If bumping the minor number, change the "Status" for that version to "Stable" in [`docs/spec/`](/docs/spec/).
 - [ ] Run `yarn clean`.
 - [ ] Ensure `yarn test` passes.
-- [ ] Ensure `yarn proptest` doesn't find any errors (run at least 5000 tests on both Firefox and Chrome).
+- [ ] Ensure `yarn proptest --firefox --chromium 5000` passes.
 - [ ] Run `yarn build` (the test steps should have done this, but just for good measure).
 - [ ] Update filesize numbers in [`readme.md`](/docs/readme.md), rounding to nearest tenth of a kb.
   - [ ] `gzip < dist/deeplinks.js | wc -c` for the gzip number.

@@ -1,6 +1,5 @@
 import { chromium, firefox } from 'playwright';
-
-const url = 'http://localhost:25381/tests/html/e2e.html';
+import process from 'process';
 
 function randomlySelect() {
   // https://stackoverflow.com/questions/1527803/generating-random-whole-numbers-in-javascript-in-a-specific-range/29246176#29246176
@@ -43,10 +42,9 @@ function getSelection() {
   return document.getSelection().toString();
 }
 
-(async () => {
-  const browserType = Math.random() > 0.5 ? 'chromium' : 'firefox';
+export default async (port, browserType, runs) => {
+  const url = `http://localhost:${port}/tests/html/e2e.html`;
   const browser = browserType === 'chromium' ? await chromium.launch() : await firefox.launch();
-  console.log(`Using browser: ${browserType}`);
   const page = await browser.newPage();
   let testsRun = 0;
   for (;;) {
@@ -75,11 +73,15 @@ function getSelection() {
 
     if (origSelectionTest !== newSelectionTest) {
       console.log(`\nFAILED!\n${location}\n--- EXPECTED: ---\n${origSelectionTest}\n--- RECEIVED: ---\n${newSelectionTest}\n--- REPLICATION: ---\n${replication}`);
-      process.exit(); // eslint-disable-line no-undef
+      return false;
     }
 
     testsRun++;
-    process.stdout.write(`tests run: ${testsRun}\r`); // eslint-disable-line no-undef
+    process.stdout.write(`tests run: ${testsRun}\r`);
+    if (testsRun === runs) {
+      console.log('');
+      return true;
+    }
   }
-})();
+};
 

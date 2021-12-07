@@ -12,4 +12,4 @@ Generative testing is a approach where rather than hardcoding the test cases, ra
 
 Right now, the generative tests are pretty simple — they select some range of text on the page, look at what the URL fragment is set to, open a new page with that fragment, and check that the same text is selected in both cases.
 
-The generative tests can be run with `yarn proptest`. This will keep running until a bug is found, so you'll probably want to kill it at some point once you're satisfied that it's unlikely to find anything.
+The generative tests can be run with `yarn proptest`. This will keep running until a bug is found, unless you specify a number of runs (like `yarn proptest 500`). You can choose what browsers are used with the `--firefox` and `--chromium` flags — chromium is default, since it's significantly faster.

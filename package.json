@@ -7,18 +7,20 @@
     "build": "rollup -c",
     "lint": "eslint {src,tests}/**/*.{ts,mjs} rollup.config.js",
     "test": "yarn lint && yarn build && yarn playwright test",
-    "proptest": "yarn lint && yarn build && sh -c 'python -m http.server 25381 >/dev/null 2>&1' & yarn node tests/proptest.mjs"
+    "proptest": "yarn lint && yarn build && yarn node tests/proptest/main.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.17.0",
     "@rollup/plugin-typescript": "^8.3.0",
     "@typescript-eslint/eslint-plugin": "^5.4.0",
     "@typescript-eslint/parser": "^5.4.0",
+    "connect": "^3.7.0",
     "eslint": "^8.3.0",
     "eslint-plugin-playwright": "^0.6.0",
     "playwright": "^1.17.0",
     "rollup": "^2.60.1",
     "rollup-plugin-terser": "^7.0.2",
+    "serve-static": "^1.14.1",
     "ts-loader": "^9.2.6",
     "tslib": "^2.3.1",
     "typescript": "^4.5.2",
