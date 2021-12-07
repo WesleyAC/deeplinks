@@ -10,7 +10,7 @@ function randomlySelect() {
   }
 
   const nodes = [];
-  const walk = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null);
+  const walk = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
   let node;
   while (node = walk.nextNode()) { // eslint-disable-line no-cond-assign
     nodes.push(node);
@@ -18,8 +18,11 @@ function randomlySelect() {
 
   let [startIndex, endIndex] = [randInt(nodes.length), randInt(nodes.length)].sort();
   let [startNode, endNode] = [nodes[startIndex], nodes[endIndex]];
+  let [startOffset, endOffset] = [randInt(startNode.wholeText.length), randInt(endNode.wholeText.length)];
 
-  document.getSelection().setBaseAndExtent(startNode, randInt(startNode.wholeText.length), endNode, randInt(endNode.wholeText.length));
+  document.getSelection().setBaseAndExtent(startNode, startOffset, endNode, endOffset);
+
+  return `let nodes=[],walk=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT),node;while(node=walk.nextNode()){nodes.push(node)};document.getSelection().setBaseAndExtent(nodes[${startIndex}],${startOffset},nodes[${endIndex}],${endOffset});`;
 }
 
 function getLocation() {
@@ -37,7 +40,7 @@ function getSelection() {
   for (;;) {
     await page.goto(url);
 
-    await page.evaluate(randomlySelect);
+    let replication = await page.evaluate(randomlySelect);
     let origSelection = await page.evaluate(getSelection);
     let location = await page.evaluate(getLocation);
 
@@ -47,7 +50,7 @@ function getSelection() {
     let newSelection = await page.evaluate(getSelection);
 
     if (origSelection !== newSelection) {
-      console.log(`FAILED!\n${location}\n--- EXPECTED: ---\n${origSelection}\n--- RECEIVED: ---\n${newSelection}`);
+      console.log(`FAILED!\n${location}\n--- EXPECTED: ---\n${origSelection}\n--- RECEIVED: ---\n${newSelection}\n--- REPLICATION: ---\n${replication}`);
       process.exit(); // eslint-disable-line no-undef
     }
 
