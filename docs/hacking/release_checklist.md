@@ -14,7 +14,7 @@
 - [ ] Update [`docs/changelog.md`](/docs/changelog.md) with a summary of updates since last release.
 - [ ] Commit changes with the commit message `[release] vX.X.X`, where `X.X.X` is the version number.
 - [ ] Tag release via `git tag vX.X.X`.
-- [ ] Push the commit and tag to Github.
+- [ ] Push the commit and tag to Github. (Probably: `git push origin main` and `git push origin vX.X.X`)
 - [ ] Make the release zip file with `VERSION=vX.X.X sh -c 'rm /tmp/$VERSION.zip; cd dist && zip /tmp/$VERSION.zip *'`
 - [ ] Make the release at [https://github.com/WesleyAC/deeplinks/releases/new](https://github.com/WesleyAC/deeplinks/releases/new)
   - [ ] Select the correct tag.
