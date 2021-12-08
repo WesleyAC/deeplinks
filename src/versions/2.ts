@@ -210,8 +210,8 @@ function getRangeFromFragmentPart(fragmentPart: string): Range {
 
   const range = new Range();
   if (startNode && endNode) {
-    range.setStart(startNode[0], startOffset + countLeadingWhitespace(startNode[0]));
-    range.setEnd(endNode[0], endOffset + countLeadingWhitespace(endNode[0]));
+    range.setStart(startNode[0], Math.min(startOffset + countLeadingWhitespace(startNode[0]), startNode[0].wholeText.length));
+    range.setEnd(endNode[0], Math.min(endOffset + countLeadingWhitespace(endNode[0]), endNode[0].wholeText.length));
   }
   return range;
 }
