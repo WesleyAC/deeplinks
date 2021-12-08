@@ -87,7 +87,9 @@ test('multiselect', async ({ page }, testInfo) => {
     if (multiselectKnownGoodBrowsers.includes(testInfo.project.name) || dialog._initializer.message !== 'You opened a link that highlighted multiple selections of text, but your browser does not support this — only the first selection is being shown.') {
       throw 'Unexpected dialog box';
     } else {
-      await dialog.dismiss();
+      try {
+        await dialog.dismiss();
+      } catch {} // eslint-disable-line no-empty
     }
   });
   for (const fragment of Object.keys(tests)) {
