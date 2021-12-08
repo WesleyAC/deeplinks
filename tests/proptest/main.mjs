@@ -1,9 +1,10 @@
 import process from 'process';
 import roundtrip from './roundtrip.mjs';
 import server from './server.mjs';
+import whitespace from './whitespace.mjs';
 
 let browsers = new Set();
-let runs = -1;
+let runs = 500;
 
 let args = process.argv.slice(2);
 
@@ -28,8 +29,12 @@ const port = 25381;
 server(port);
 
 for (let browser of browsers) {
-  console.log(`Running roundtrip in ${browser}`);
+  console.log(`Running 'roundtrip' in ${browser}`);
   if (!await roundtrip(port, browser, runs)) {
+    process.exit(2);
+  }
+  console.log(`Running 'whitespace' in ${browser}`);
+  if (!await whitespace(port, browser, runs)) {
     process.exit(2);
   }
 }

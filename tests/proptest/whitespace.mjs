@@ -1,21 +1,21 @@
 import { chromium, firefox } from 'playwright';
-import { getLocation, getSelection, randomlySelect } from './util.mjs';
+import { getLocationFragment, getSelection, randomlySelect } from './util.mjs';
 import process from 'process';
 
 export default async (port, browserType, runs) => {
-  const url = `http://localhost:${port}/tests/html/e2e.html`;
+  const baseUrl = `http://localhost:${port}`;
   const browser = browserType === 'chromium' ? await chromium.launch() : await firefox.launch();
   const page = await browser.newPage();
   let testsRun = 0;
   for (;;) {
-    await page.goto(url);
+    await page.goto(`${baseUrl}/tests/html/e2e.2.html`);
 
     let replication = await page.evaluate(randomlySelect);
     let origSelection = await page.evaluate(getSelection);
-    let location = await page.evaluate(getLocation);
+    let fragment = await page.evaluate(getLocationFragment);
 
     await page.goto('about:blank');
-    await page.goto(location);
+    await page.goto(`${baseUrl}/tests/html/e2e.2.min.html${fragment}`);
 
     let newSelection = await page.evaluate(getSelection);
 
@@ -32,7 +32,7 @@ export default async (port, browserType, runs) => {
     }
 
     if (origSelectionTest !== newSelectionTest) {
-      console.log(`\nFAILED!\n${location}\n--- EXPECTED: ---\n${origSelectionTest}\n--- RECEIVED: ---\n${newSelectionTest}\n--- REPLICATION: ---\n${replication}`);
+      console.log(`\nFAILED!\n${fragment}\n--- EXPECTED: ---\n${origSelectionTest}\n--- RECEIVED: ---\n${newSelectionTest}\n--- REPLICATION: ---\n${replication}`);
       return false;
     }
 
