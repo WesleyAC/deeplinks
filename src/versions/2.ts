@@ -11,7 +11,7 @@ const TEXT_NODE = 3;
 const NODEFILTER_SHOW_TEXT = 0x04;
 
 function hashNode(n: Text): string {
-  return fromNumber(cyrb53(n.wholeText));
+  return fromNumber(cyrb53(n.wholeText.trim()));
 }
 
 function countLeadingWhitespace(node: Text): number {
