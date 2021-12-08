@@ -20,10 +20,10 @@ test('misc', async ({ page }) => {
     '#2BLkIVltu0:0:K~ssssssssssssssss~0~A': ['identical text nodes\nidentical text nodes?\nidentical text nodes\nidentical text nodes?\nidentical text nodes\nidentical text nodes?\nidentical text nodes\nidentical text nodes?\nidentical text nodes\nidentical text nodes\nidentical text nodes\nidentical text nodes\nidentical text nodes\nidentical text nodes\nidentical text nodes', 'many duplicate nodes'],
   };
   const url1Tests = {
-    '#2JmqE9nH3Z:1v:2U': ['valueless until you get the screw out', 'short format'],
-    '#2JmqE9nH3Z:1v.JmqE9nH3Z:2U': ['valueless until you get the screw out', 'long format (but single node)'],
-    '#2J9W3o85TQ:C.3EdKovNLr:B': ['統一碼 💚💙💜🧡💛💚💙💜🧡💛💚💙💜🧡\n\n🐢🐢', 'selecting multiple different nodes, also unicode'],
-    '#26SHlbtTkC:4.CBcmrfV8L:4': ['links.js e2e', 'selecting parent/child nodes'],
+    '#2JmqE9nH3Z:1q:2P': ['valueless until you get the screw out', 'short format'],
+    '#2JmqE9nH3Z:1q.JmqE9nH3Z:2P': ['valueless until you get the screw out', 'long format (but single node)'],
+    '#2J9W3o85TQ:5.3EdKovNLr:4': ['統一碼 💚💙💜🧡💛💚💙💜🧡💛💚💙💜🧡\n\n🐢🐢', 'selecting multiple different nodes, also unicode'],
+    '#26SHlbtTkC:4.CBcmrfV8L:3': ['links.js e2e', 'selecting parent/child nodes'],
     '#2EdoNr3xj_:0.BLkIVltu0:E': ['uh oh\nidentical text', 'multiple identical nodes, but no disambiguation - start node is unique'],
     '#27whfBu1TH:0.TxIWFV5Nq:4': ['identical text nodes?\nhmmm', 'multiple identical nodes, but no disambiguation - end node is unique'],
     '#2EdoNr3xj_:0.7whfBu1TH:L~seeeee~0~2': ['uh oh\nidentical text nodes\nidentical text nodes?\nidentical text nodes\nidentical text nodes?', 'multiple identical nodes, with disambiguation - start node is unique'],
@@ -79,7 +79,7 @@ test('misc', async ({ page }) => {
 test('multiselect', async ({ page }, testInfo) => {
   const multiselectKnownGoodBrowsers = ['firefox'];
   const tests = {
-    '#293nojgL33:L.3fpc_LoVz:0,3fpc_LoVz:5.VVGZj9Vjq:0': ['bold', 'italic'],
+    '#293nojgL33:E.3fpc_LoVz:0,3fpc_LoVz:4.VVGZj9Vjq:0': ['bold ', 'italic '], // not great that the v2 format puts the spaces here, but it is what it is for the moment.
     '#193nojgL33:21.3fpc_LoVz:0,3fpc_LoVz:5.VVGZj9Vjq:0': ['bold', 'italic'],
     '#1.J9W3o85TQ:7:15,J9W3o85TQ:16:18,J9W3o85TQ:26.J9W3o85TQ:28,J9W3o85TQ:36:38,3EdKovNLr:0:18,VIMmaQoVW:229.JmqE9nH3Z:10': ['我是少量的統一碼', '💚', '💚', '💚', ' 🐢🐢🐢\n\n', 'unimportant.\n\nRight'],
   };

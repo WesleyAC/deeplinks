@@ -14,6 +14,10 @@ function hashNode(n: Text): string {
   return fromNumber(cyrb53(n.wholeText));
 }
 
+function countLeadingWhitespace(node: Text): number {
+  return node.wholeText.length - node.wholeText.trimStart().length;
+}
+
 // Take a range, and return a new range containing the same text, but ensuring
 // that the start and end are both non-whitespace-only text nodes.
 function normalizeRange(range: Range) {
@@ -107,8 +111,8 @@ export function selectionToFragment(selection: Selection): string {
       const [startNode, endNode] = [range.startContainer, range.endContainer];
       if (startNode.nodeType == TEXT_NODE && endNode.nodeType == TEXT_NODE) {
         ranges.push([
-          [hashNode(startNode as Text), startNode as Text, fromNumber(range.startOffset)],
-          [hashNode(endNode as Text), endNode as Text, fromNumber(range.endOffset)],
+          [hashNode(startNode as Text), startNode as Text, fromNumber(Math.max(range.startOffset - countLeadingWhitespace(startNode as Text), 0))],
+          [hashNode(endNode as Text), endNode as Text, fromNumber(Math.max(Math.min(range.endOffset - countLeadingWhitespace(endNode as Text), (endNode as Text).wholeText.trim().length), 0))],
           [[], 0, 0],
         ]);
       }
@@ -206,8 +210,8 @@ function getRangeFromFragmentPart(fragmentPart: string): Range {
 
   const range = new Range();
   if (startNode && endNode) {
-    range.setStart(startNode[0], startOffset);
-    range.setEnd(endNode[0], endOffset);
+    range.setStart(startNode[0], startOffset + countLeadingWhitespace(startNode[0]));
+    range.setEnd(endNode[0], endOffset + countLeadingWhitespace(endNode[0]));
   }
   return range;
 }
