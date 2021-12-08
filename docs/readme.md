@@ -22,7 +22,7 @@ This description might make it sound a little complicated, but it's actually pre
 ## Non-goals
 
 * Handling frequently-changing content, such as wikis. It should be robust to occasional small edits, but if you want truly robust deep linking, you really need support from the authoring environment (CRDTs, etc).
-* Working for every usecase. I have specific things that I want in a script like this, and other people will have other things they want. Those people should build their own similar scripts — diversity is good!
+* Working for every usecase. I have specific things that I want in a script like this, and other people will have other things they want. Those people should build their own similar scripts — diversity is good! For instance, this intentionally does not implement the [WICG Text Fragment](https://wicg.github.io/scroll-to-text-fragment/) interface, although it's possible it may in the future if that ends up standardized in a form that I like.
 
 ## Installation
 
