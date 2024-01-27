@@ -1,5 +1,7 @@
 import * as v2 from './versions/2';
 
+type Version = '2' | '1';
+
 function selectRanges(ranges: Range[]) {
   const selection = document.getSelection() as Selection;
   selection.removeAllRanges();
@@ -12,16 +14,31 @@ function selectRanges(ranges: Range[]) {
   }
 }
 
+function fragmentVersion(fragment: string): Version | null {
+  if (fragment && !document.getElementById(fragment)) {
+    switch (fragment[0]) {
+    case '1':
+    case '2':
+      return fragment[0];
+    }
+  }
+
+  return null;
+}
+
 void (async () => {
   const fragment = location.hash.slice(1);
 
-  if (fragment && !document.getElementById(fragment)) {
-    if (fragment[0] == '1') {
-      const v1 = await import('./versions/1');
-      selectRanges(v1.fragmentToRangeList(fragment));
-    } else if (fragment[0] == '2') {
-      selectRanges(v2.fragmentToRangeList(fragment));
-    }
+  switch (fragmentVersion(fragment)) {
+  case '2': {
+    selectRanges(v2.fragmentToRangeList(fragment));
+    break;
+  }
+  case '1': {
+    const v1 = await import('./versions/1');
+    selectRanges(v1.fragmentToRangeList(fragment));
+    break;
+  }
   }
 
   // This is in a setTimeout to ensure that the code above does all of its
@@ -33,10 +50,25 @@ void (async () => {
   // in general — we can explicitly decide when and how to do version bumps,
   // for instance.
   setTimeout(() => {
-    document.addEventListener('selectionchange', () => {
-      const fragment = v2.selectionToFragment(document.getSelection() as Selection);
+    document.addEventListener('selectionchange', (e) => {
+      const selection = document.getSelection() as Selection;
+
       // replaceState is used instead of setting location.hash to avoid scrolling.
-      history.replaceState(null, '', location.pathname + fragment);
+
+      if (!selection.isCollapsed) {
+        const fragment = v2.selectionToFragment(document.getSelection() as Selection);
+
+        history.replaceState(null, '', location.pathname + fragment);
+      }
+      else {
+        // we only want to clear the fragment from our url if this is a fragment we've generated
+        const fragment = location.hash.slice(1);
+
+        // don't bother checking for v1 fragments, async at this point would cause challenges
+        if (fragmentVersion(fragment) == '2' && v2.fragmentToRangeList(fragment).length > 0) {
+          history.replaceState(null, '', location.pathname);
+        }
+      }
     });
   }, 0);
 })();
