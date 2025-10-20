@@ -2090,7 +2090,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fsevents@npm:~2.3.2":
+"fsevents@npm:2.3.2, fsevents@npm:~2.3.2":
   version: 2.3.2
   resolution: "fsevents@npm:2.3.2"
   dependencies:
@@ -2100,7 +2100,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fsevents@patch:fsevents@~2.3.2#~builtin<compat/fsevents>":
+"fsevents@patch:fsevents@2.3.2#~builtin<compat/fsevents>, fsevents@patch:fsevents@~2.3.2#~builtin<compat/fsevents>":
   version: 2.3.2
   resolution: "fsevents@patch:fsevents@npm%3A2.3.2#~builtin<compat/fsevents>::version=2.3.2&hash=18f3a7"
   dependencies:
@@ -3106,6 +3106,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"playwright-core@npm:1.56.1":
+  version: 1.56.1
+  resolution: "playwright-core@npm:1.56.1"
+  bin:
+    playwright-core: cli.js
+  checksum: 170dff398b47da140182631ae025190248dabde7a5264335f54e238546a478f522ac9a620b31462e6e31c883273223bff8e883b502a699da490abe9741fb3b71
+  languageName: node
+  linkType: hard
+
 "playwright-core@npm:=1.17.0":
   version: 1.17.0
   resolution: "playwright-core@npm:1.17.0"
@@ -3132,14 +3141,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"playwright@npm:^1.17.0":
-  version: 1.17.0
-  resolution: "playwright@npm:1.17.0"
+"playwright@npm:^1.55.1":
+  version: 1.56.1
+  resolution: "playwright@npm:1.56.1"
   dependencies:
-    playwright-core: =1.17.0
+    fsevents: 2.3.2
+    playwright-core: 1.56.1
+  dependenciesMeta:
+    fsevents:
+      optional: true
   bin:
     playwright: cli.js
-  checksum: b49e744171befb1d4be4a03833dd257e538a4aa18d83669f126a2a45cb5ab10f226830c05743a4acc549fb7cb96734e904981c4e85b5ca5903c7ab2c31172178
+  checksum: e7537e7d5048a1a8544d7675b005196ba9db919edc3b6d46b92273ee6f20e37ada8991774c5df9ef5123ea4610978d582feb141c8a02f4cf256a6c0b224b8793
   languageName: node
   linkType: hard
 
@@ -3374,7 +3387,7 @@ __metadata:
     connect: ^3.7.0
     eslint: ^8.3.0
     eslint-plugin-playwright: ^0.6.0
-    playwright: ^1.17.0
+    playwright: ^1.55.1
     rollup: ^2.60.1
     rollup-plugin-terser: ^7.0.2
     serve-static: ^1.14.1
